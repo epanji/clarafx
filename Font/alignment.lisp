@@ -1,10 +1,10 @@
-(cl:in-package :claraoke-font)
+(cl:in-package :clarafx-font)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Splitter
 ;;;
-(defun split-dialogue (object &optional (size 16) (space 0) (font *font-loader*))
+(defun split-dialogue (object &optional (fontspace 0) (face *face*))
   (declare (type claraoke-subtitle:dialogue object))
   (let ((start (claraoke:durationinteger (claraoke:start object)))
         (string (claraoke:.text (claraoke:.text object)))
@@ -19,19 +19,18 @@
       (loop for tm in tms
             for (p1 p2) on idx
             collect (prog1 (make-syllable (subseq string p1 p2)
-                                          :size size
-                                          :space space
-                                          :font font
+                                          :fontspace fontspace
+                                          :face face
                                           :start (+ counter start)
                                           :duration tm)
                       (incf counter tm))))))
 
 (defmacro with-every-syllable-from-karaoke
-    ((var-name dialogue subtitle alignment-code style-name) &body body)
+    ((var-name dialogue subtitle alignment-code style-name dpi) &body body)
   (let ((alignment (gensym "ALG"))
         (result (gensym "RES")))
     `(let* ((,alignment (make-alignment ,alignment-code
-                                        (make-canvas ,subtitle ,style-name)
+                                        (make-canvas ,subtitle ,style-name ,dpi)
                                         ,dialogue))
             (,result (loop for ,var-name in (syllables ,alignment)
                            collect (progn ,@body))))
@@ -47,11 +46,10 @@
    (duration :initarg :duration :reader duration :initform nil))
   (:documentation "Drawable area with alignment inside canvas."))
 
-(defun make-syllable
-    (string &key (start 0) (duration 15) (size 16) (space 0) (font *font-loader*))
+(defun make-syllable (string &key (start 0) (duration 15) (fontspace 0) (face *face*))
   (make-instance 'syllable
-                 :h size
-                 :w (string-pixel-width string :size size :space space :font font)
+                 :h (string-pixel-height string :face face)
+                 :w (string-pixel-width string :face face :fontspace fontspace)
                  :plain-text string
                  :start start
                  :duration duration))
@@ -75,32 +73,28 @@
   (setf (slot-value instance 'code) new-value)
   (calculate-virtual-alignment-1 instance))
 
-;;; TODO
 (defun make-alignment* (code
                         width height
                         margin-top margin-left
                         margin-bottom margin-right
                         dialogue
                         &optional
-                          fontname
-                          fontsize
-                          fontspace)
+                          fontname fontsize fontspace
+                          bold italic dpi)
   (let ((canvas (make-canvas* width height
                               margin-top margin-left
                               margin-bottom margin-right
-                              fontname fontsize fontspace)))
+                              fontname fontsize fontspace
+                              bold italic dpi)))
     (make-alignment code canvas dialogue)))
 
-;;; TODO font-loader from name
 (defun make-alignment (code canvas dialogue)
-  (make-instance 'alignment
-                 :an code
-                 :canvas canvas
-                 :syllables (split-dialogue
-                             dialogue
-                             (fontsize canvas)
-                             (fontspace canvas)
-                             (font-from-name (fontname canvas)))))
+  (let ((fontspace (fontspace canvas))
+        (face (make-canvas-face canvas)))
+    (make-instance 'alignment
+                   :an code
+                   :canvas canvas
+                   :syllables (split-dialogue dialogue fontspace face))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

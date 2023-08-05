@@ -1,4 +1,4 @@
-(cl:in-package :claraoke-font)
+(cl:in-package :clarafx-font)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -17,7 +17,10 @@
 (defclass canvas (rectangle-area)
   ((fontname :initarg :fontname :accessor fontname :initform "Arial")
    (fontsize :initarg :fontsize :accessor fontsize :initform 12)
-   (fontspace :initarg :fontspace :accessor fontspace :initform 0))
+   (fontspace :initarg :fontspace :accessor fontspace :initform 0)
+   (bold :initarg :bold :accessor bold :initform 0)
+   (italic :initarg :italic :accessor italic :initform 0)
+   (dpi :initarg :dpi :accessor dpi :initform 64))
   (:documentation "Drawable area with rectangle shape."))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -37,16 +40,12 @@
     (setf (margin-bottom instance) bottom)
     (setf (margin-right instance) right)))
 
-(defun make-canvas* (width
-                     height
-                     margin-top
-                     margin-left
-                     margin-bottom
-                     margin-right
+(defun make-canvas* (width height
+                     margin-top margin-left
+                     margin-bottom margin-right
                      &optional
-                       fontname
-                       fontsize
-                       fontspace)
+                       fontname fontsize fontspace
+                       bold italic dpi)
   (let ((canvas (make-instance 'canvas
                                :w width
                                :h height
@@ -60,10 +59,15 @@
       (setf (fontsize canvas) fontsize))
     (unless (null fontspace)
       (setf (fontspace canvas) fontspace))
+    (unless (null bold)
+      (setf (bold canvas) bold))
+    (unless (null italic)
+      (setf (italic canvas) italic))
+    (unless (null dpi)
+      (setf (dpi canvas) dpi))
     canvas))
 
-;;; TODO font bold italic
-(defun make-canvas (object &optional (style-name "Default"))
+(defun make-canvas (object &optional (style-name "Default") (dpi 64))
   (declare (type claraoke-subtitle:subtitle object))
   (let ((width (claraoke:value (claraoke:find-info object "PlayResX")))
         (height (claraoke:value (claraoke:find-info object "PlayResY")))
@@ -74,10 +78,12 @@
           (margin-right (claraoke:margin-r style))
           (fontname (claraoke:fontname style))
           (fontsize (claraoke:fontsize style))
-          (fontspace (claraoke:spacing style)))
+          (fontspace (claraoke:spacing style))
+          (bold (claraoke:bold style))
+          (italic (claraoke:italic style)))
       (make-canvas* width height
                     margin-top margin-left margin-bottom margin-right
-                    fontname fontsize fontspace))))
+                    fontname fontsize fontspace bold italic dpi))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -116,4 +122,18 @@
 (defun (setf margin-right) (new-value canvas)
   (let ((width (- (width canvas) (point-x1 canvas))))
     (setf (point-x2 canvas) (- width new-value))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Others
+;;;
+(defun make-canvas-face (canvas)
+  (declare (type canvas canvas))
+  (with-accessors ((fn fontname)
+                   (fs fontsize)
+                   (b bold)
+                   (i italic)
+                   (d dpi))
+      canvas
+    (make-face* fn :bold b :italic i :fontsize fs :dpi d)))
 
