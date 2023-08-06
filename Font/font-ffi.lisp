@@ -62,14 +62,10 @@
 (defun %string-pixel-width (string &key (face *face*))
   (freetype2:string-pixel-width face string))
 
-(defun string-pixel-height (string &key (face *face*))
-  (freetype2:string-pixel-height face string))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; clarafx-font
-;;;
-(defun string-pixel-width (string &key (face *face*) (fontspace 0))
+(defun string-pixel-width (string &key (fontspace 0) (face *face*))
   (+ (%string-pixel-width string :face face)
      (* fontspace (length string))))
+
+(defun string-pixel-height (string &key (face *face*))
+  (freetype2:string-pixel-height face string))
 

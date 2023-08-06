@@ -129,11 +129,11 @@
 ;;;
 (defun make-canvas-face (canvas)
   (declare (type canvas canvas))
-  (with-accessors ((fn fontname)
-                   (fs fontsize)
-                   (b bold)
-                   (i italic)
-                   (d dpi))
+  (with-accessors ((name fontname)
+                   (size fontsize)
+                   (bold bold)
+                   (italic italic)
+                   (dpi dpi))
       canvas
-    (make-face* fn :bold b :italic i :fontsize fs :dpi d)))
+    (make-face* name :bold bold :italic italic :fontsize size :dpi dpi)))
 

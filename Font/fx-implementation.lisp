@@ -14,6 +14,12 @@
                                                    :modifiers ,modifiers))))
          (claraoke:dialogue (plain-text ,var-name) :start (start ,var-name)
                                                    :end (claraoke:end ,dialogue)
+                                                   :layer (claraoke:layer ,dialogue)
+                                                   :style (claraoke:.style ,dialogue)
+                                                   :event-name (claraoke:name ,dialogue)
+                                                   :event-margin-l (claraoke:margin-l ,dialogue)
+                                                   :event-margin-r (claraoke:margin-r ,dialogue)
+                                                   :event-margin-v (claraoke:margin-v ,dialogue)
                                                    :overrides ,overrides)))))
 
 (defmacro define-effect ((name var) &body body)
