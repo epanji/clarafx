@@ -1,13 +1,12 @@
 (cl:in-package #:cl-user)
 
-(defpackage #:clarafx-font
+(defpackage #:clarafx.core
   (:use #:common-lisp #:claraoke)
   (:intern #:%string-pixel-width
            #:calculate-layout-width
            #:calculate-virtual-alignment-1
            #:ensure-font
            #:ensure-font-pathname
-           #:line
            #:make-face
            #:make-face*
            #:margin-bottom
@@ -38,6 +37,8 @@
            #:make-canvas*
            #:make-canvas-face
            #:make-syllable
+           #:origin-end
+           #:origin-start
            #:plain-text
            #:point-x1
            #:point-x2
@@ -45,10 +46,6 @@
            #:point-y2
            #:rectangle
            #:rectangle-area
-           #:resize-big-y-syllables
-           #:resize-small-y-syllables
-           #:rotate-ccw-syllables
-           #:rotate-cw-syllables
            #:split-dialogue
            #:start
            #:syllable

@@ -1,4 +1,4 @@
-(cl:in-package :clarafx-font)
+(cl:in-package :clarafx.core)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

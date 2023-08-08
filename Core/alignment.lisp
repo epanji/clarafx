@@ -1,4 +1,4 @@
-(cl:in-package :clarafx-font)
+(cl:in-package :clarafx.core)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -99,7 +99,7 @@
             (,result (loop for syllables in (line-syllables ,alignment)
                            append (loop for ,var-name in syllables
                                         collect (progn ,@body)))))
-       (values ,result ,alignment))))
+       (values (reverse ,result) ,alignment))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -109,8 +109,22 @@
   ((plain-text :initarg :plain-text :reader plain-text :initform "-")
    (start :initarg :start :reader start :initform nil)
    (duration :initarg :duration :reader duration :initform nil)
-   (line :initarg :line :reader line :initform 0))
+   (line :initarg :line :reader line :initform 0)
+   (script-info :writer (setf script-info) :initform nil)
+   (style :writer (setf style) :initform nil)
+   (dialogue :writer (setf dialogue) :initform nil)
+   (origin-start :accessor origin-start :initform nil)
+   (origin-end :accessor origin-end :initform nil))
   (:documentation "Drawable area with alignment inside canvas."))
+
+(defmethod script-info ((object syllable) &key)
+  (slot-value object 'script-info))
+
+(defmethod style ((object syllable) &key)
+  (slot-value object 'style))
+
+(defmethod dialogue ((object syllable) &key)
+  (slot-value object 'dialogue))
 
 (defun make-syllable (string &key (start 0) (duration 15) (fontspace 0) (face *face*) (line 0))
   (make-instance 'syllable
