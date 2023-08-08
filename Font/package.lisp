@@ -1,7 +1,7 @@
 (cl:in-package #:cl-user)
 
 (defpackage #:clarafx-font
-  (:use #:common-lisp)
+  (:use #:common-lisp #:claraoke)
   (:intern #:%string-pixel-width
            #:calculate-layout-width
            #:calculate-virtual-alignment-1

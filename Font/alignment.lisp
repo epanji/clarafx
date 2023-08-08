@@ -6,15 +6,15 @@
 ;;;
 (defun split-dialogue-single-line (object &key (line 0) (fontspace 0) (face *face*))
   (declare (type claraoke-subtitle:dialogue object))
-  (let ((start (claraoke:durationinteger (claraoke:start object)))
-        (string (claraoke:.text (claraoke:.text object)))
+  (let ((start (durationinteger (start object)))
+        (string (.text (.text object)))
         (counter 0))
     (multiple-value-bind (indexes1 times1)
-        (loop for batch in (claraoke:overrides object)
-              for kara = (claraoke:increase-karaoke batch 0)
+        (loop for batch in (overrides object)
+              for kara = (increase-karaoke batch 0)
               unless (null kara)
-                collect (claraoke:index batch) into indexes2
-                and collect (claraoke:arg1 kara) into times2
+                collect (index batch) into indexes2
+                and collect (arg1 kara) into times2
               finally (return (values indexes2 times2)))
       (loop for time in times1
             for (index1 index2) on indexes1
@@ -36,11 +36,11 @@
   ;; Duplicate first to avoid mutations
   (setf object (claraoke-subtitle:dialogue-from-string
                 (with-output-to-string (stream)
-                  (claraoke:print-script object stream))))
-  (let ((string1 (claraoke:.text (claraoke:.text object)))
-        (overrides1 (claraoke:overrides object))
-        (start1 (claraoke:durationinteger (claraoke:start object)))
-        (end1 (claraoke:durationinteger (claraoke:end object)))
+                  (print-script object stream))))
+  (let ((string1 (.text (.text object)))
+        (overrides1 (overrides object))
+        (start1 (durationinteger (start object)))
+        (end1 (durationinteger (end object)))
         (counter1 0))
     (loop with counter2 = 0
           for (start2 end2) in (claraoke-internal:split-by-char #\Space string1 0 nil)
@@ -57,26 +57,26 @@
                             (overrides2 (remove-if
                                          (lambda (index)
                                            (not (< (1- counter2) index start2)))
-                                         overrides1 :key 'claraoke:index)))
+                                         overrides1 :key 'index)))
                         ;; Mutate overrides
                         (mapc (lambda (override)
-                                (decf (claraoke:index override) counter2))
+                                (decf (index override) counter2))
                               overrides2)
                         (setf counter2 start2)
                         ;; Result follow by duration counter
-                        (prog1 (claraoke:dialogue
+                        (prog1 (dialogue
                                 string2
                                 :overrides overrides2
                                 :start (+ start1 counter1)
                                 :end end1)
                           (loop for batch in overrides2
-                                for kara = (claraoke:increase-karaoke batch 0)
+                                for kara = (increase-karaoke batch 0)
                                 unless (null kara)
-                                  do (incf counter1 (claraoke:arg1 kara)))))))))
+                                  do (incf counter1 (arg1 kara)))))))))
 
 (defun split-dialogue (object &key layout-width (fontspace 0) (face *face*))
   (declare (type claraoke-subtitle:dialogue object))
-  (let* ((string (claraoke:.text (claraoke:.text object)))
+  (let* ((string (.text (.text object)))
          (string-width (string-pixel-width string :fontspace fontspace :face face))
          (dialogues (list object)))
     (when (and (integerp layout-width) (> string-width layout-width))
