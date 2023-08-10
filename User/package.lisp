@@ -67,6 +67,7 @@
            #:encoding
            #:end
            #:events
+           #:extra-dialogues
            #:failed-to-create-color
            #:failed-to-create-duration
            #:failed-to-create-events

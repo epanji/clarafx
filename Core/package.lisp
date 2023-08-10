@@ -29,6 +29,7 @@
            #:define-effect
            #:dpi
            #:duration
+           #:extra-dialogues
            #:fontname
            #:fontsize
            #:fontspace

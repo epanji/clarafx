@@ -91,14 +91,20 @@
 
 (defmacro with-every-syllable-from-karaoke
     ((var-name dialogue subtitle alignment-code style-name dpi) &body body)
-  (let ((alignment (gensym "WESFK"))
+  (let ((canvas (gensym "WESFK"))
+        (alignment (gensym "WESFK"))
         (result (gensym "WESFK")))
-    `(let* ((,alignment (make-alignment ,alignment-code
-                                        (make-canvas ,subtitle ,style-name ,dpi)
+    `(let* ((,canvas (make-canvas ,subtitle ,style-name ,dpi))
+            (,alignment (make-alignment ,alignment-code
+                                        ,canvas
                                         ,dialogue))
             (,result (loop for syllables in (line-syllables ,alignment)
                            append (loop for ,var-name in syllables
-                                        collect (progn ,@body)))))
+                                        append (progn (setf (style ,var-name)
+                                                            (find-style ,subtitle ,style-name))
+                                                      (setf (dialogue ,var-name) ,dialogue)
+                                                      (setf (canvas ,var-name) ,canvas)
+                                                      ,@body)))))
        (values (reverse ,result) ,alignment))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -110,15 +116,13 @@
    (start :initarg :start :reader start :initform nil)
    (duration :initarg :duration :reader duration :initform nil)
    (line :initarg :line :reader line :initform 0)
-   (script-info :writer (setf script-info) :initform nil)
    (style :writer (setf style) :initform nil)
    (dialogue :writer (setf dialogue) :initform nil)
+   (canvas :accessor canvas :initform nil)
    (origin-start :accessor origin-start :initform nil)
-   (origin-end :accessor origin-end :initform nil))
+   (origin-end :accessor origin-end :initform nil)
+   (extra-dialogues :accessor extra-dialogues :initform '()))
   (:documentation "Drawable area with alignment inside canvas."))
-
-(defmethod script-info ((object syllable) &key)
-  (slot-value object 'script-info))
 
 (defmethod style ((object syllable) &key)
   (slot-value object 'style))
