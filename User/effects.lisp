@@ -54,4 +54,31 @@
   (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
   (modifier 'fontscale-y :arg1 200)
   (modifier 'transformation3 :arg1 0 :arg2 500 :arg3 (modifier 'fontscale-y :arg1 100)))
+
+(define-effect (enlarge-with-star-each-syllables var)
+  (progn (setf (extra-dialogues var)
+               (list
+                (dialogue "m 0 0 l 100 30 130 130 160 30 260 0 160 -30 130 -130 100 -30"
+                          :start (start var)
+                          :duration 50
+                          :layer 1000
+                          :overrides
+                          (list
+                           (override
+                            'batch 0
+                            :modifiers
+                            (list
+                             (modifier 'drawing-mode :arg1 4)
+                             (modifier 'pos :arg1 (+ (base-x1 var)
+                                                     (truncate (width var) 2))
+                                            :arg2 (base-y1 var))
+                             (modifier 'alpha3 :arg1 (alphastring "FF"))
+                             (modifier 'alpha4 :arg1 (alphastring "FF"))
+                             (modifier 'color1
+                                       :arg1 (colorstring
+                                              (secondary-colour (style var))))
+                             (modifier 'fad :arg1 220 :arg2 220)))))))
+         (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var)))
+  (modifier 'fontscale-y :arg1 0)
+  (modifier 'transformation3 :arg1 0 :arg2 500 :arg3 (modifier 'fontscale-y :arg1 100)))
 
