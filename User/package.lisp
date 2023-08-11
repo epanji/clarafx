@@ -21,6 +21,10 @@
            #:arg6
            #:arg7
            #:back-colour
+           #:base-x1
+           #:base-x2
+           #:base-y1
+           #:base-y2
            #:blue
            #:bold
            #:border-style

@@ -5,10 +5,10 @@
 ;;; Base classes
 ;;;
 (defclass rectangle ()
-  ((x1 :initform 0 :accessor point-x1)
-   (y1 :initform 0 :accessor point-y1)
-   (x2 :initform 0 :accessor point-x2)
-   (y2 :initform 0 :accessor point-y2)))
+  ((x1 :initform 0 :accessor point-x1 :reader base-x1)
+   (y1 :initform 0 :accessor point-y1 :reader base-y2)
+   (x2 :initform 0 :accessor point-x2 :reader base-x2)
+   (y2 :initform 0 :accessor point-y2 :reader base-y1)))
 
 (defclass rectangle-area (rectangle)
   ((w :initarg :w :reader width :initform (error "Required :w for width"))

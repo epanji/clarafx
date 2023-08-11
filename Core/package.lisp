@@ -20,6 +20,10 @@
            #:string-pixel-width)
   (:export #:alignment
            #:alignment-code
+           #:base-x1
+           #:base-x2
+           #:base-y1
+           #:base-y2
            #:bold
            #:canvas
            #:define-effect
