@@ -269,7 +269,7 @@
                   (dolist (syllable syllables)
                     (setf (point-x1 syllable) (+ xmin xcnt))
                     (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (+ ymax (* (1+ (line syllable)) (height syllable))))
+                    (setf (point-y1 syllable) (+ ymax (* (line syllable) (height syllable))))
                     (setf (point-y2 syllable) (+ ymax (* (1+ (line syllable)) (height syllable))))
                     ;; xcnt
                     (setf xcnt (+ xcnt (width syllable))))))
@@ -280,7 +280,7 @@
                   (dolist (syllable syllables)
                     (setf (point-x1 syllable) (+ xmin xcnt))
                     (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (+ ymax (* (1+ (line syllable)) (height syllable))))
+                    (setf (point-y1 syllable) (+ ymax (* (line syllable) (height syllable))))
                     (setf (point-y2 syllable) (+ ymax (* (1+ (line syllable)) (height syllable))))
                     ;; xcnt
                     (setf xcnt (+ xcnt (width syllable))))))
@@ -291,7 +291,7 @@
                   (dolist (syllable syllables)
                     (setf (point-x1 syllable) (+ xmin xcnt))
                     (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (+ ymax (* (1+ (line syllable)) (height syllable))))
+                    (setf (point-y1 syllable) (+ ymax (* (line syllable) (height syllable))))
                     (setf (point-y2 syllable) (+ ymax (* (1+ (line syllable)) (height syllable))))
                     ;; xcnt
                     (setf xcnt (+ xcnt (width syllable))))))))))
