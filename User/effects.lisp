@@ -81,4 +81,62 @@
          (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var)))
   (modifier 'fontscale-y :arg1 0)
   (modifier 'transformation3 :arg1 0 :arg2 500 :arg3 (modifier 'fontscale-y :arg1 100)))
+
+(define-effect (clip-expand-vertical-each-syllables var)
+  (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
+  (modifier 'clip-rectangle :arg1 (point-x1 var)
+                            :arg2 (+ (point-y1 var) (* 3/4 (height var)))
+                            :arg3 (point-x2 var)
+                            :arg4 (- (point-y2 var) (* 3/4 (height var))))
+  (modifier 'transformation4
+            :arg1 0 :arg2 500 :arg3 0.9
+            :arg4 (modifier 'clip-rectangle :arg1 (point-x1 var)
+                                            :arg2 (point-y1 var)
+                                            :arg3 (point-x2 var)
+                                            :arg4 (point-y2 var))))
+
+(define-effect (clip-expand-horizontal-each-syllables var)
+  (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
+  (modifier 'clip-rectangle :arg1 (+ (point-x1 var) (* 1/2 (width var)))
+                            :arg2 (point-y1 var)
+                            :arg3 (- (point-x2 var) (* 1/2 (width var)))
+                            :arg4 (point-y2 var))
+  (modifier 'transformation4
+            :arg1 0 :arg2 250 :arg3 0.9
+            :arg4 (modifier 'clip-rectangle :arg1 (point-x1 var)
+                                            :arg2 (point-y1 var)
+                                            :arg3 (point-x2 var)
+                                            :arg4 (point-y2 var))))
+
+(define-effect (vacum-center-top-each-syllables var)
+  (modifier 'transformation4
+            :arg1 (* 10 (duration var))
+            :arg2 3000
+            :arg3 0.9
+            :arg4 (list (modifier 'fontscale-x :arg1 60)
+                        (modifier 'fontscale-x :arg1 60)))
+  (modifier 'move :arg1 (base-x1 var)
+                  :arg2 (base-y1 var)
+                  :arg3 (truncate (width (canvas var)) 2)
+                  :arg4 (- (height var))
+                  :arg5 (* 10 (duration var))
+                  :arg6 3000))
+
+(define-effect (shear-x-each-syllables var)
+  (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
+  (modifier 'transformation4
+            :arg1 0
+            :arg2 250
+            :arg3 0.9
+            :arg4 (list (modifier 'fontshear-x :arg1 -1)
+                        (modifier 'fontshear-x :arg1 0))))
+
+(define-effect (shear-y-each-syllables var)
+  (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
+  (modifier 'transformation4
+            :arg1 0
+            :arg2 250
+            :arg3 0.9
+            :arg4 (list (modifier 'fontshear-y :arg1 -1)
+                        (modifier 'fontshear-y :arg1 0))))
 
