@@ -95,6 +95,7 @@
            #:fonts
            #:fontsize
            #:fontspace
+           #:funcall-effect
            #:graphic
            #:graphics
            #:green
@@ -169,6 +170,7 @@
            #:outline-colour
            #:override
            #:overrides
+           #:parse-effect
            #:parse-script
            #:picture
            #:plain-text
@@ -179,9 +181,11 @@
            #:primary-colour
            #:print-script
            #:random-color
+           #:read-subtitle-effect
            #:rectangle
            #:rectangle-area
            #:red
+           #:register-effect
            #:rgb
            #:scale-x
            #:scale-y
@@ -212,5 +216,6 @@
            #:value-mixin
            #:width
            #:with-every-syllable-from-karaoke
-           #:with-syllable-modifiers))
+           #:with-syllable-modifiers
+           #:write-subtitle-effect))
 

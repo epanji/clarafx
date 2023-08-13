@@ -19,6 +19,7 @@
                 :pathname "User"
                 :serial t
                 :components ((:file "package")
-                             (:file "effects")))
+                             (:file "effects")
+                             (:file "file-io")))
                (:static-file "README.md")))
 
