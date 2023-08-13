@@ -7,12 +7,14 @@
            #:calculate-virtual-alignment-1
            #:ensure-font
            #:ensure-font-pathname
+           #:find-effect
            #:make-face
            #:make-face*
            #:margin-bottom
            #:margin-left
            #:margin-right
            #:margin-top
+           #:parse-effect-info
            #:set-char-size
            #:split-dialogue-multiple-line
            #:split-dialogue-single-line
@@ -33,6 +35,7 @@
            #:fontname
            #:fontsize
            #:fontspace
+           #:funcall-effect
            #:height
            #:italic
            #:line-syllables
@@ -44,6 +47,7 @@
            #:make-syllable
            #:origin-end
            #:origin-start
+           #:parse-effect
            #:plain-text
            #:point-x1
            #:point-x2
@@ -51,6 +55,7 @@
            #:point-y2
            #:rectangle
            #:rectangle-area
+           #:register-effect
            #:split-dialogue
            #:start
            #:syllable
