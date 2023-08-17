@@ -32,5 +32,7 @@
                              (:file "shapes")
                              (:file "effects")
                              (:file "file-io")))
-               (:static-file "README.md")))
+               (:static-file "README.md"))
+  :in-order-to ((test-op (load-op "clarafx-test")))
+  :perform (test-op (o c) (symbol-call :clarafx-test :suite-tests)))
 
