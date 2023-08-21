@@ -57,10 +57,27 @@ Dialogue: 1st,2nd,3rd,4th,5th,6th,7th,8th,,10th
 3. Write modified subtitle to different file
 
 ```sh
-sbcl --eval '(require :asdf)' \
-     --eval '(asdf:load-system "clarafx")' \
-     --eval '(clarafx:write-subtitle-effect #p"source.ass" #p"output.ass")' \
-     --eval '(sb-ext:quit)'
+$ sbcl --eval '(require :asdf)' \
+       --eval '(asdf:load-system "clarafx")' \
+       --eval '(clarafx:write-subtitle-effect #p"source.ass" #p"output.ass")' \
+       --eval '(sb-ext:quit)'
 ```
+
+## Write your own effect
+
+```lisp
+
+(define-effect (my-own-effect var)
+  (modifier ...)
+  (modifier ...)
+  ...)
+
+(register-effect "my-own-effect" 'my-own-effect)
+
+```
+
+_Example file [mysubfx3.lisp](Examples/mysubfx3.lisp)_
+
+![FX3](Examples/mysubfx3.gif)
 
 
