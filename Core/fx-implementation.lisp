@@ -15,7 +15,9 @@
          (list* (dialogue (plain-text ,var-name) :start (or (origin-start ,var-name) (start ,var-name))
                                                  :end (or (origin-end ,var-name) (end ,dialogue))
                                                  :layer (layer ,dialogue)
-                                                 :style (.style ,dialogue)
+                                                 :style (if (find-style ,subtitle ,style-name)
+                                                            (name (find-style ,subtitle ,style-name))
+                                                            (.style ,dialogue))
                                                  :event-name (name ,dialogue)
                                                  :event-margin-l (margin-l ,dialogue)
                                                  :event-margin-r (margin-r ,dialogue)
@@ -50,7 +52,7 @@
      (claraoke-internal:split-by-char #\, (value info) 5))))
 
 (defun funcall-effect (subtitle dialogue)
-  "Calling matching effect between `dialogue effect' and `script info'.
+  "Call matching effect between `dialogue effect' and `script info'.
 It will return DIALOGUEs when successfully calling the effect, otherwise NIL.
 Failure could be caused by no match in `script info' or unregistered effect name.
 
@@ -58,7 +60,7 @@ This is sample for script info and effect name:
 
 [Script Info]
 ...
-clarafx-<number>: <effect>[,style[,dpi[,alignment[,no complement predicate]]]]
+clarafx-<number>: <effect>[,[style][,[dpi][,[alignment][,[no complement predicate]]]]]
 ...
 
 [Events]
@@ -72,7 +74,9 @@ Dialogue: 1st,2nd,3rd,4th,5th,6th,7th,8th,clarafx-<number>,10th
     (unless (null effect-info)
       (let* ((effect-info-list (parse-effect-info effect-info))
              (effect-name (first effect-info-list))
-             (style-name (or (second effect-info-list) "Default"))
+             (style-name (or (second effect-info-list)
+                             (.style dialogue)
+                             "Default"))
              (dpi (or (third effect-info-list) 64))
              (alignment-code (or (fourth effect-info-list) 2))
              (effect (find-effect effect-name))
