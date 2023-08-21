@@ -57,12 +57,16 @@
                             (overrides2 (remove-if
                                          (lambda (index)
                                            (not (< (1- counter2) index start2)))
-                                         overrides1 :key 'index)))
+                                         overrides1 :key 'index))
+                            (ktime 15))
                         ;; Mutate overrides
                         (mapc (lambda (override)
                                 (decf (index override) counter2))
                               overrides2)
                         (setf counter2 start2)
+                        ;; Prevent null KARAOKE
+                        (when (null overrides2)
+                          (setf overrides2 (list (override 'karaoke 0 :arg1 ktime))))
                         ;; Result follow by duration counter
                         (prog1 (dialogue
                                 string2
@@ -72,7 +76,8 @@
                           (loop for batch in overrides2
                                 for kara = (increase-karaoke batch 0)
                                 unless (null kara)
-                                  do (incf counter1 (arg1 kara)))))))))
+                                  do (incf counter1 (arg1 kara))
+                                     (setf ktime (arg1 kara)))))))))
 
 (defun split-dialogue (object &key layout-width (fontspace 0) (face *face*))
   (declare (type claraoke-subtitle:dialogue object))
