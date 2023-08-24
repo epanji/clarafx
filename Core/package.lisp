@@ -14,6 +14,7 @@
            #:margin-left
            #:margin-right
            #:margin-top
+           #:newline-and-space-splitter
            #:parse-effect-info
            #:set-char-size
            #:split-dialogue-multiple-line

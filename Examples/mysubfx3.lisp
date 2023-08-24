@@ -27,7 +27,7 @@
                                  :margin-r 250
                                  :margin-v 150
                                  :outline 10
-                                 :spacing 20
+                                 :spacing 18
                                  :shadow 5))
 
 (define-effect (my-own-effect var)
@@ -43,7 +43,7 @@
 (insert-info *sub* (info "clarafx-2" :value "my-own-effect,fx1,62,5,true"))
 (insert-info *sub* (info "clarafx-3" :value "shaking,,62,5"))
 
-(insert-event *sub* (dialogue "{\\k150}This is macro for creating KARAOKE effects"
+(insert-event *sub* (dialogue "{\\k150}This is macro for creating\\NKARAOKE effects"
                               :start "0.05" :end "5.0"
                               :layer 100
                               :effect "clarafx-1"))

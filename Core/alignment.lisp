@@ -11,7 +11,8 @@
         (counter 0))
     (multiple-value-bind (indexes1 times1)
         (loop for batch in (overrides object)
-              for kara = (increase-karaoke batch 0)
+              for kara = (and (typep batch 'claraoke-text:batch)
+                              (increase-karaoke batch 0))
               unless (null kara)
                 collect (index batch) into indexes2
                 and collect (arg1 kara) into times2
@@ -30,6 +31,37 @@
   (declare (type canvas canvas))
   (- (width canvas) (+ (margin-right canvas) (margin-left canvas))))
 
+(defun newline-and-space-splitter (dialogue)
+  (declare (type claraoke-subtitle:dialogue dialogue))
+  (let ((string (.text (.text dialogue)))
+        (newlines (loop for override in (overrides dialogue)
+                        for index = (typecase override
+                                      (claraoke-text:batch
+                                       (let ((newline (find-modifier override 'newline)))
+                                         (unless (null newline)
+                                           (index newline))))
+                                      (claraoke-text:newline
+                                       (index override)))
+                        unless (null index)
+                          collect index)))
+    (let ((char-bag '(#\Space #\Newline))
+          (length (length string))
+          (result '())
+          (start 0)
+          (end 0))
+      (loop (when (= length end)
+              (push (list start end :normal) result)
+              (return))
+            (when (member end newlines)
+              (push (list start end :force) result)
+              (setf start end))
+            (when (and (/= start end)
+                       (member (char string end) char-bag))
+              (push (list start end :normal) result)
+              (setf start (1+ end)))
+            (incf end))
+      (reverse result))))
+
 (defun split-dialogue-multiple-line (object &key layout-width (fontspace 0) (face *face*))
   (declare (type claraoke-subtitle:dialogue object)
            (type integer layout-width))
@@ -43,17 +75,22 @@
         (end1 (durationinteger (end object)))
         (counter1 0))
     (loop with counter2 = 0
-          for (start2 end2) in (claraoke-internal:split-by-char #\Space string1 0 nil)
+          for (start2 end2 mark) in (newline-and-space-splitter object)
           for string-width = (string-pixel-width (subseq string1 counter2 end2)
                                                  :fontspace fontspace
                                                  :face face)
-          when (or (> string-width layout-width) (null end2))
+          when (or (> string-width layout-width)
+                   (eql mark :force)
+                   (= end2 (length string1)))
             collect (progn
-                      ;; String length for start with null end
-                      (when (null end2)
-                        (setf start2 (length string1)))
+                      ;; Mutate start when force split or last in loop
+                      (when (or (eql mark :force)
+                                (= end2 (length string1)))
+                        (setf start2 end2))
                       ;; Filter overrides
-                      (let ((string2 (subseq string1 counter2 (1- start2)))
+                      (let ((string2 (subseq string1 counter2 (if (eql mark :force)
+                                                                  start2
+                                                                  (1- start2))))
                             (overrides2 (remove-if
                                          (lambda (index)
                                            (not (< (1- counter2) index start2)))
@@ -65,7 +102,9 @@
                               overrides2)
                         (setf counter2 start2)
                         ;; Prevent null KARAOKE
-                        (when (null overrides2)
+                        (when (or (null overrides2)
+                                  (null (and (typep (first overrides2) 'claraoke-text:batch)
+                                             (increase-karaoke (first overrides2) 0))))
                           (setf overrides2 (list (override 'karaoke 0 :arg1 ktime))))
                         ;; Result follow by duration counter
                         (prog1 (dialogue
@@ -74,7 +113,8 @@
                                 :start (+ start1 counter1)
                                 :end end1)
                           (loop for batch in overrides2
-                                for kara = (increase-karaoke batch 0)
+                                for kara = (and (typep batch 'claraoke-text:batch)
+                                                (increase-karaoke batch 0))
                                 unless (null kara)
                                   do (incf counter1 (arg1 kara))
                                      (setf ktime (arg1 kara)))))))))
