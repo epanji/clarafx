@@ -8,6 +8,7 @@
            #:ensure-font
            #:ensure-font-pathname
            #:find-effect
+           #:force-split-indexes
            #:make-face
            #:make-face*
            #:margin-bottom

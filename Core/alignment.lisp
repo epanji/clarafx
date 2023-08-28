@@ -31,19 +31,24 @@
   (declare (type canvas canvas))
   (- (width canvas) (+ (margin-right canvas) (margin-left canvas))))
 
+(defun force-split-indexes (object)
+  (declare (type (or list claraoke-subtitle:dialogue) object))
+  (let ((overrides (if (listp object) object (overrides object))))
+    (loop for override in overrides
+          for index = (typecase override
+                        (claraoke-text:batch
+                         (let ((newline (find-modifier override 'newline)))
+                           (unless (null newline)
+                             (index newline))))
+                        (claraoke-text:newline
+                         (index override)))
+          unless (null index)
+            collect index)))
+
 (defun newline-and-space-splitter (dialogue)
   (declare (type claraoke-subtitle:dialogue dialogue))
   (let ((string (.text (.text dialogue)))
-        (newlines (loop for override in (overrides dialogue)
-                        for index = (typecase override
-                                      (claraoke-text:batch
-                                       (let ((newline (find-modifier override 'newline)))
-                                         (unless (null newline)
-                                           (index newline))))
-                                      (claraoke-text:newline
-                                       (index override)))
-                        unless (null index)
-                          collect index)))
+        (indexes (force-split-indexes dialogue)))
     (let ((char-bag '(#\Space #\Newline))
           (length (length string))
           (result '())
@@ -52,7 +57,7 @@
       (loop (when (= length end)
               (push (list start end :normal) result)
               (return))
-            (when (member end newlines)
+            (when (member end indexes)
               (push (list start end :force) result)
               (setf start end))
             (when (and (/= start end)
@@ -124,7 +129,9 @@
   (let* ((string (.text (.text object)))
          (string-width (string-pixel-width string :fontspace fontspace :face face))
          (dialogues (list object)))
-    (when (and (integerp layout-width) (> string-width layout-width))
+    (when (or (and (integerp layout-width)
+                   (> string-width layout-width))
+              (not (null (force-split-indexes object))))
       (setf dialogues (split-dialogue-multiple-line object :layout-width layout-width
                                                            :fontspace fontspace
                                                            :face face)))
