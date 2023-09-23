@@ -108,7 +108,7 @@
                                             :arg3 (point-x2 var)
                                             :arg4 (point-y2 var))))
 
-(define-effect (vacum-center-top-each-syllables var)
+(define-effect (vacuum-top-center-each-syllables var)
   (modifier 'transformation4
             :arg1 (* 10 (duration var))
             :arg2 3000
@@ -155,7 +155,7 @@
 (register-effect "enlarge-with-star" 'enlarge-with-star-each-syllables)
 (register-effect "clip-expand-vertical" 'clip-expand-vertical-each-syllables)
 (register-effect "clip-expand-horizontal" 'clip-expand-horizontal-each-syllables)
-(register-effect "vacum-center-top" 'vacum-center-top-each-syllables)
+(register-effect "vacuum-top-center" 'vacuum-top-center-each-syllables)
 (register-effect "shear-x" 'shear-x-each-syllables)
 (register-effect "shear-y" 'shear-y-each-syllables)
 

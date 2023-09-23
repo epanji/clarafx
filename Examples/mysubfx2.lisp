@@ -37,7 +37,7 @@
                      ;;
                      (shear-x-each-syllables *d2* :subtitle *sub* :dpi 62 :alignment-code 7)
                      (complement-effect-syllables *d2* :subtitle *sub* :dpi 62 :alignment-code 7)
-                     (vacum-center-top-each-syllables *d2* :subtitle *sub* :dpi 62 :alignment-code 5)
+                     (vacuum-top-center-each-syllables *d2* :subtitle *sub* :dpi 62 :alignment-code 5)
                      (complement-effect-syllables *d2* :subtitle *sub* :dpi 62 :alignment-code 5)
                      (shear-y-each-syllables *d2* :subtitle *sub* :dpi 62 :alignment-code 3)
                      (complement-effect-syllables *d2* :subtitle *sub* :dpi 62 :alignment-code 3)))
