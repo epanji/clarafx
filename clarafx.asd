@@ -22,7 +22,8 @@
                              (:file "font-ffi")
                              (:file "canvas")
                              (:file "alignment")
-                             (:file "fx-implementation")))
+                             (:file "fx-implementation")
+                             (:file "drawing-command-ffi")))
                (:module "clarafx.user"
                 :pathname "User"
                 :serial t

@@ -1,7 +1,7 @@
 (cl:in-package #:cl-user)
 
 (defpackage #:clarafx.core
-  (:use #:common-lisp #:claraoke)
+  (:use #:common-lisp #:claraoke #:clarafx.draw)
   (:intern #:%string-pixel-width
            #:calculate-layout-width
            #:calculate-virtual-alignment-1
@@ -9,8 +9,6 @@
            #:ensure-font-pathname
            #:find-effect
            #:force-split-indexes
-           #:make-face
-           #:make-face*
            #:margin-bottom
            #:margin-left
            #:margin-right
@@ -30,6 +28,7 @@
            #:base-y2
            #:bold
            #:canvas
+           #:char-to-drawing-commands
            #:define-effect
            #:dpi
            #:duration
@@ -46,6 +45,8 @@
            #:make-canvas
            #:make-canvas*
            #:make-canvas-face
+           #:make-face
+           #:make-face*
            #:make-syllable
            #:origin-end
            #:origin-start
