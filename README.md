@@ -80,4 +80,30 @@ _Example file [mysubfx3.lisp](Examples/mysubfx3.lisp)_
 
 ![FX3](Examples/mysubfx3.gif)
 
+## Drawing Commands
+
+1. Drawing commands string from function
+
+```lisp
+
+(make-shape-five-star)
+
+```
+
+2. Drawing commands from character
+
+```lisp
+
+(char-to-drawing-commands #\&)
+
+```
+
+3. Drawing commands from SVG path
+
+```lisp
+
+(svg-path-to-drawing-commands #p"/tmp/path.svg")
+
+```
+
 
