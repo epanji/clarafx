@@ -7,7 +7,15 @@
   :license  "BSD 2-Clause License"
   :depends-on ("claraoke" "font-discovery" "cl-freetype2")
   :serial t
-  :components ((:module "clarafx.core"
+  :components ((:module "clarafx.draw"
+                :pathname "Draw"
+                :serial t
+                :components ((:file "package")
+                             (:file "point")
+                             (:file "drawing-command")
+                             (:file "drawing-command-parser")
+                             (:file "drawing-command-operator")))
+               (:module "clarafx.core"
                 :pathname "Core"
                 :serial t
                 :components ((:file "package")
