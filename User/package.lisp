@@ -2,10 +2,11 @@
 
 (defpackage #:clarafx.user
   (:nicknames #:clarafx)
-  (:use #:common-lisp #:claraoke #:clarafx.core)
+  (:use #:common-lisp #:claraoke #:clarafx.draw #:clarafx.core)
   (:export #:.shadow
            #:.style
            #:.text
+           #:add-drawing-command
            #:alignment
            #:alignment-code
            #:alpha
@@ -30,6 +31,7 @@
            #:border-style
            #:canvas
            #:centiseconds
+           #:char-to-drawing-commands
            #:color
            #:colorp
            #:colorstring
@@ -53,6 +55,9 @@
            #:descriptor
            #:dialogue
            #:dpi
+           #:drawing-commands
+           #:drawing-commands-expr
+           #:drawing-commands-string
            #:duration
            #:duration-difference
            #:duration-greaterp
@@ -135,15 +140,44 @@
            #:make-canvas
            #:make-canvas*
            #:make-canvas-face
+           #:make-dc-bezier
+           #:make-dc-beziers
+           #:make-dc-close-bsp
+           #:make-dc-cubic-bsp
+           #:make-dc-extend-bsp
+           #:make-dc-line
+           #:make-dc-lines
+           #:make-dc-move
+           #:make-dc-no-close-move
+           #:make-face
+           #:make-face*
+           #:make-shape-five-star
+           #:make-shape-heart
+           #:make-shape-star
            #:make-syllable
            #:margin-l
            #:margin-r
            #:margin-v
+           #:max-x
+           #:max-xy
+           #:max-y
+           #:min-x
+           #:min-xy
+           #:min-y
+           #:minmax-x
+           #:minmax-xy
+           #:minmax-y
            #:minutes
            #:modifier
            #:modifiers
            #:movie
+           #:moving-x
+           #:moving-xy
+           #:moving-y
            #:name
+           #:negate-x
+           #:negate-xy
+           #:negate-y
            #:note
            #:null-object-warning
            #:object-must-be-batch
@@ -170,6 +204,7 @@
            #:outline-colour
            #:override
            #:overrides
+           #:parse-drawing-commands
            #:parse-effect
            #:parse-script
            #:picture
@@ -186,7 +221,13 @@
            #:rectangle-area
            #:red
            #:register-effect
+           #:resize-x
+           #:resize-xy
+           #:resize-y
            #:rgb
+           #:round-x
+           #:round-xy
+           #:round-y
            #:scale-x
            #:scale-y
            #:script
@@ -205,6 +246,8 @@
            #:style
            #:styles
            #:subtitle
+           #:svg-data-to-element-drawing-commands
+           #:svg-path-to-drawing-commands
            #:syllable
            #:synch-duration
            #:table-line

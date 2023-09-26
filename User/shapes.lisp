@@ -1,0 +1,59 @@
+(cl:in-package #:clarafx.user)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Draw Shape from top-left alignment (7)
+;;;
+(defun make-shape-star (&optional rawp)
+  (let ((dcs (make-instance 'drawing-commands)))
+    (mapc (lambda (dc)
+            (add-drawing-command dcs dc))
+          (list
+           (make-dc-move 0 125)
+           (make-dc-line 100 150)
+           (make-dc-line 125 250)
+           (make-dc-line 150 150)
+           (make-dc-line 250 125)
+           (make-dc-line 150 100)
+           (make-dc-line 125 0)
+           (make-dc-line 100 100)
+           (make-dc-line 0 125)))
+    (if (null rawp)
+        (drawing-commands-string dcs)
+        (values dcs))))
+
+(defun make-shape-five-star (&optional rawp)
+  (let ((dcs (make-instance 'drawing-commands)))
+    (mapc (lambda (dc)
+            (add-drawing-command dcs dc))
+          (list
+           (make-dc-move 58 288)
+           (make-dc-line 152 220)
+           (make-dc-line 246 288)
+           (make-dc-line 210 178)
+           (make-dc-line 304 110)
+           (make-dc-line 187 110)
+           (make-dc-line 152 0)
+           (make-dc-line 117 110)
+           (make-dc-line 0 110)
+           (make-dc-line 94 178)
+           (make-dc-line 58 288)))
+    (if (null rawp)
+        (drawing-commands-string dcs)
+        (values dcs))))
+
+(defun make-shape-heart (&optional rawp)
+  (let ((dcs (make-instance 'drawing-commands)))
+    (mapc (lambda (dc)
+            (add-drawing-command dcs dc))
+          (list
+           (make-dc-move 70 70)
+           (make-dc-bezier 100 30 180 0 250 70)
+           (make-dc-bezier 320 0 400 30 430 70)
+           (make-dc-bezier 500 150 390 300 250 360)
+           (make-dc-bezier 110 300 0 150 70 70)
+           (make-dc-close-bsp)))
+    (if (null rawp)
+        (drawing-commands-string dcs)
+        (values dcs))))
+
