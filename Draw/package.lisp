@@ -2,11 +2,17 @@
 
 (defpackage #:clarafx.draw
   (:use #:common-lisp)
-  (:intern #:%minmax
+  (:intern #:%cos
+           #:%deg->rad
+           #:%minmax
            #:%moving
            #:%negate
+           #:%new-x
+           #:%new-y
            #:%resize
+           #:%rotate
            #:%round
+           #:%sin
            #:bezier
            #:close-bsp
            #:cubic-bsp
@@ -59,6 +65,8 @@
            #:resize-x
            #:resize-xy
            #:resize-y
+           #:rotate-center
+           #:rotate-origin
            #:round-x
            #:round-xy
            #:round-y

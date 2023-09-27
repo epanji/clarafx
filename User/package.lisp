@@ -225,6 +225,8 @@
            #:resize-xy
            #:resize-y
            #:rgb
+           #:rotate-center
+           #:rotate-origin
            #:round-x
            #:round-xy
            #:round-y

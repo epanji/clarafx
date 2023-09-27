@@ -309,4 +309,69 @@
           (funcall *compare-max-x* nil)
           (funcall *compare-min-y* nil)
           (funcall *compare-max-y* nil))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Rotate: rotate-origin, rotate-center
+;;;
+;;; x' = x cos θ + y sin θ
+;;; y' = - x sin θ + y cos θ
+;;;
+(defun %deg->rad (angle)
+  (let ((deg (mod angle 360)))
+    (* deg (/ pi 180))))
+
+(defun %cos (angle)
+  (cos (%deg->rad angle)))
+
+(defun %sin (angle)
+  (sin (%deg->rad angle)))
+
+(defun %new-x (angle x y)
+  (round (+ (* x (%cos angle))
+            (* y (%sin angle)))))
+
+(defun %new-y (angle x y)
+  (round (+ (- (* x (%sin angle)))
+            (* y (%cos angle)))))
+
+(defgeneric %rotate (object origin angle))
+
+(defmethod %rotate ((object point) (origin point) (angle real))
+  (let ((object-x (point-x object))
+        (object-y (point-y object))
+        (origin-x (point-x origin))
+        (origin-y (point-y origin)))
+    (let ((x (- object-x origin-x))
+          (y (- object-y origin-y)))
+      (setf (point-x object) (+ (%new-x angle x y) origin-x)
+            (point-y object) (+ (%new-y angle x y) origin-y))))
+  (values))
+
+(defmethod %rotate ((object close-bsp) origin angle)
+  (values))
+
+(defmethod %rotate ((object drawing-command) (origin point) (angle real))
+  (%rotate (points object) origin angle))
+
+(defmethod %rotate ((object drawing-commands) (origin point) (angle real))
+  (%rotate (drawing-commands object) origin angle))
+
+(defmethod %rotate ((object cons) (origin point) (angle real))
+  (let ((container (etypecase object
+                     ((cons drawing-command) object)
+                     ((cons point) object))))
+    (loop for item in container
+          do (%rotate item origin angle))))
+
+(defun rotate-origin (object angle &optional (x 0) (y 0))
+  (let ((origin (make-instance 'point :x x :y y)))
+    (%rotate object origin angle)
+    (values object)))
+
+(defun rotate-center (object angle)
+  (destructuring-bind (min-x max-x min-y max-y) (minmax-xy object)
+    (let ((x (- max-x (/ (- max-x min-x) 2.0)))
+          (y (- max-y (/ (- max-y min-y) 2.0))))
+      (rotate-origin object angle x y))))
 
