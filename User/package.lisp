@@ -135,6 +135,7 @@
            #:line
            #:line-syllables
            #:lines
+           #:load-external-effects
            #:make-alignment
            #:make-alignment*
            #:make-canvas
