@@ -3,9 +3,9 @@
 (defsystem "clarafx"
   :version ""
   :author "Panji Kusuma <epanji@gmail.com>"
-  :description ""
+  :description "Read and write customize karaoke effects targeting ASS format. (Advanced Substation Alpha)"
   :license  "BSD 2-Clause License"
-  :depends-on ("claraoke" "font-discovery" "cl-freetype2")
+  :depends-on ("asdf" "claraoke" "font-discovery" "cl-freetype2" "unix-opts")
   :serial t
   :components ((:module "clarafx.draw"
                 :pathname "Draw"
@@ -32,7 +32,15 @@
                              (:file "shapes")
                              (:file "effects")
                              (:file "file-io")))
-               (:static-file "README.md"))
+               (:module "clarafx.cli"
+                :pathname "CLI"
+                :serial t
+                :components ((:file "package")
+                             (:file "main")
+                             (:static-file "Makefile")))
+               (:static-file "LICENSE")
+               (:static-file "README.md")
+               (:static-file "version.lisp-expr"))
   :in-order-to ((test-op (load-op "clarafx-test")))
   :perform (test-op (o c) (symbol-call :clarafx-test :suite-tests)))
 
