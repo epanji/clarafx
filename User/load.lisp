@@ -13,11 +13,9 @@
                                        (list ".config" "clarafx")))))
 
 (defun effects-pathname ()
-  (cond ((probe-file (current-effects-pathname))
-         (current-effects-pathname))
-        ((probe-file (user-effects-pathname))
-         (user-effects-pathname))
-        (t (warn "No external effects"))))
+  (or (probe-file (current-effects-pathname))
+      (probe-file (user-effects-pathname))
+      (warn "No external effects")))
 
 (when (null (find-package :clarafx.load))
   (defpackage #:clarafx.load
