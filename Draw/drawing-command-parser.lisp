@@ -173,51 +173,54 @@
 ;;;
 (defun svg-data-to-element-drawing-commands (string)
   (declare (type string string))
-  (let ((*parser* (make-parser string)) (result '()))
-    (labels ((recursive-fun (&optional char)
-               (let ((p (cond
-                          ((null char) nil)
-                          ;; command
-                          ((case char
-                             ((#\M #\m) (push #\m result))
-                             ((#\L #\l) (push #\l result))
-                             ((#\C #\c) (push #\b result))
-                             ((#\Z #\z) (push #\c result)))
-                           (funcall *parser* :consume))
-                          ;; argument
-                          ((or (char-equal #\- char)
-                               (char-equal #\. char)
-                               (digit-char-p char))
-                           (let ((index (funcall *parser* :index))
-                                 (dotp nil)
-                                 (next nil))
-                             ;; peek next char
-                             (loop (setf next (funcall *parser* :peek 1))
-                                   (when (or (null next)
-                                             (char-equal #\, next)
-                                             (char-equal #\- next)
-                                             (char-equal #\Space next)
-                                             (alpha-char-p next))
-                                     (setf dotp nil)
-                                     (return))
-                                   (when (char-equal #\. next)
-                                     (if (null dotp)
-                                         (setf dotp t)
-                                         (return)))
-                                   (funcall *parser* :advance))
-                             ;; push numeric argument
-                             (push (read-from-string
-                                    (subseq (funcall *parser* :string)
-                                            index
-                                            (1+ (funcall *parser* :index))))
-                                   result)
-                             (funcall *parser* :consume)))
-                          ;; ignored
-                          (t (funcall *parser* :consume)))))
-                 (if (null p)
-                     (reverse result)
-                     (recursive-fun (funcall *parser* :peek))))))
-      (recursive-fun (funcall *parser* :peek)))))
+  (let ((*parser* (make-parser string))
+        (result '())
+        (max-loop (length string)))
+    (flet ((step-fun (&optional char)
+             (cond
+               ((null char) :stop)
+               ;; command
+               ((case char
+                  ((#\M #\m) (push #\m result))
+                  ((#\L #\l) (push #\l result))
+                  ((#\C #\c) (push #\b result))
+                  ((#\Z #\z) (push #\c result)))
+                (funcall *parser* :consume))
+               ;; argument
+               ((or (char-equal #\- char)
+                    (char-equal #\. char)
+                    (digit-char-p char))
+                (let ((index (funcall *parser* :index))
+                      (dotp nil)
+                      (next nil))
+                  ;; peek next char
+                  (loop (setf next (funcall *parser* :peek 1))
+                        (when (or (null next)
+                                  (char-equal #\, next)
+                                  (char-equal #\- next)
+                                  (char-equal #\Space next)
+                                  (alpha-char-p next))
+                          (setf dotp nil)
+                          (return))
+                        (when (char-equal #\. next)
+                          (if (null dotp)
+                              (setf dotp t)
+                              (return)))
+                        (funcall *parser* :advance))
+                  ;; push numeric argument
+                  (push (read-from-string
+                         (subseq (funcall *parser* :string)
+                                 index
+                                 (1+ (funcall *parser* :index))))
+                        result)
+                  (funcall *parser* :consume)))
+               ;; ignored
+               (t (funcall *parser* :consume)))))
+      (loop for i from 0 upto max-loop
+            for c = (step-fun (funcall *parser* :peek))
+            when (eql :stop c)
+              do (return t))
+      (reverse result))))
 
 (defun svg-path-to-drawing-commands (path.svg &key (rawp t))
   (declare (type pathname path.svg))
