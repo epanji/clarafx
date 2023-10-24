@@ -38,7 +38,8 @@
   (let ((parser (clarafx.draw::make-parser string))
         (output (make-string-output-stream))
         (start 0)
-        (end 0))
+        (end 0)
+        (strip-p nil))
     (declare (special parser))
     (labels ((recursive-fun (&optional char)
                (let ((p (cond
@@ -117,6 +118,7 @@
                                    (princ (subseq (funcall parser :string)
                                                   start end)
                                           output))
+                               (setf strip-p t)
                                (setf start (1+ (funcall parser :index)))))
                            (funcall parser :consume))
                           ;; default
@@ -124,14 +126,16 @@
                  (if (eql :stop p)
                      (get-output-stream-string output)
                      (recursive-fun (funcall parser :peek))))))
-      (prog1 (recursive-fun (funcall parser :peek))
-        (close output)))))
+      (let ((result (recursive-fun (funcall parser :peek))))
+        (close output)
+        (values result strip-p)))))
 
 (defun maybe-revision (file)
   (declare (type pathname file))
   (let ((ori (alexandria:read-file-into-string file)))
-    (let ((rev (strip-package-from-symbol ori)))
-      (unless (string-equal ori rev)
+    (multiple-value-bind (rev pred)
+        (strip-package-from-symbol ori)
+      (when pred
         (with-open-file (stream file :direction :output
                                      :if-exists :rename
                                      :if-does-not-exist :create)
@@ -142,9 +146,10 @@
   (let ((file (effects-pathname))
         (*package* (find-package :clarafx.load)))
     (unless (null file)
-      (maybe-revision file)
-      (handler-case (prog1 (load file)
-                      (format *error-output* "~&Loading ~A~%" file))
+      (handler-case (prog2
+                        (maybe-revision file)
+                        (load file)
+                      (format *standard-output* "~&Loading ~A~%" file))
         (error (condition)
           (format *error-output*
                   "~&~A~%Incomplete loading ~A~%"
