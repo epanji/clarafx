@@ -48,6 +48,17 @@
                                           start nil)
                                   output)
                            :stop)
+                          ;; single line comment
+                          ((char-equal #\; char)
+                           (let ((next nil))
+                             (loop (setf next (funcall parser :peek 1))
+                                   (when (or (null next)
+                                             (char-equal #\Newline next))
+                                     (funcall parser :advance)
+                                     (return))
+                                   (funcall parser :advance))
+                             (setf end (1+ (funcall parser :index))))
+                           (funcall parser :consume))
                           ;; string
                           ((char-equal #\" char)
                            (let ((curr nil)
