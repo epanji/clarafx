@@ -41,50 +41,51 @@
   (let ((*parser* (make-parser string))
         (result '())
         (max-loop (length string)))
-    (flet ((step-fun (&optional char)
-             (cond
-               ((null char) :stop)
-               ;; command
-               ((case char
-                  ((#\M #\m) (push #\m result))
-                  ((#\N #\n) (push #\n result))
-                  ((#\L #\l) (push #\l result))
-                  ((#\B #\b) (push #\b result))
-                  ((#\S #\s) (push #\s result))
-                  ((#\P #\p) (push #\p result))
-                  ((#\C #\c) (push #\c result)))
-                (funcall *parser* :consume))
-               ;; argument
-               ((or (char-equal #\- char)
-                    (char-equal #\. char)
-                    (digit-char-p char))
-                (let ((index (funcall *parser* :index))
-                      (dotp nil)
-                      (next nil))
-                  ;; peek next char
-                  (loop (setf next (funcall *parser* :peek 1))
-                        (when (or (null next)
-                                  (char-equal #\- next)
-                                  (char-equal #\Space next)
-                                  (alpha-char-p next))
-                          (setf dotp nil)
-                          (return))
-                        (when (char-equal #\. next)
-                          (if (null dotp)
-                              (setf dotp t)
-                              (return)))
-                        (funcall *parser* :advance))
-                  ;; push numeric argument
-                  (push (read-from-string
-                         (subseq (funcall *parser* :string)
-                                 index
-                                 (1+ (funcall *parser* :index))))
-                        result)
-                  (funcall *parser* :consume)))
-               ;; ignored
-               (t (funcall *parser* :consume)))))
+    (flet ((step-fun ()
+             (let ((char (funcall *parser* :peek)))
+               (cond
+                 ((null char) :stop)
+                 ;; command
+                 ((case char
+                    ((#\M #\m) (push #\m result))
+                    ((#\N #\n) (push #\n result))
+                    ((#\L #\l) (push #\l result))
+                    ((#\B #\b) (push #\b result))
+                    ((#\S #\s) (push #\s result))
+                    ((#\P #\p) (push #\p result))
+                    ((#\C #\c) (push #\c result)))
+                  (funcall *parser* :consume))
+                 ;; argument
+                 ((or (char-equal #\- char)
+                      (char-equal #\. char)
+                      (digit-char-p char))
+                  (let ((index (funcall *parser* :index))
+                        (dotp nil)
+                        (next nil))
+                    ;; peek next char
+                    (loop (setf next (funcall *parser* :peek 1))
+                          (when (or (null next)
+                                    (char-equal #\- next)
+                                    (char-equal #\Space next)
+                                    (alpha-char-p next))
+                            (setf dotp nil)
+                            (return))
+                          (when (char-equal #\. next)
+                            (if (null dotp)
+                                (setf dotp t)
+                                (return)))
+                          (funcall *parser* :advance))
+                    ;; push numeric argument
+                    (push (read-from-string
+                           (subseq (funcall *parser* :string)
+                                   index
+                                   (1+ (funcall *parser* :index))))
+                          result)
+                    (funcall *parser* :consume)))
+                 ;; ignored
+                 (t (funcall *parser* :consume))))))
       (loop for i from 0 upto max-loop
-            for c = (step-fun (funcall *parser* :peek))
+            for c = (step-fun)
             when (eql :stop c)
               do (return t))
       (reverse result))))
@@ -176,48 +177,49 @@
   (let ((*parser* (make-parser string))
         (result '())
         (max-loop (length string)))
-    (flet ((step-fun (&optional char)
-             (cond
-               ((null char) :stop)
-               ;; command
-               ((case char
-                  ((#\M #\m) (push #\m result))
-                  ((#\L #\l) (push #\l result))
-                  ((#\C #\c) (push #\b result))
-                  ((#\Z #\z) (push #\c result)))
-                (funcall *parser* :consume))
-               ;; argument
-               ((or (char-equal #\- char)
-                    (char-equal #\. char)
-                    (digit-char-p char))
-                (let ((index (funcall *parser* :index))
-                      (dotp nil)
-                      (next nil))
-                  ;; peek next char
-                  (loop (setf next (funcall *parser* :peek 1))
-                        (when (or (null next)
-                                  (char-equal #\, next)
-                                  (char-equal #\- next)
-                                  (char-equal #\Space next)
-                                  (alpha-char-p next))
-                          (setf dotp nil)
-                          (return))
-                        (when (char-equal #\. next)
-                          (if (null dotp)
-                              (setf dotp t)
-                              (return)))
-                        (funcall *parser* :advance))
-                  ;; push numeric argument
-                  (push (read-from-string
-                         (subseq (funcall *parser* :string)
-                                 index
-                                 (1+ (funcall *parser* :index))))
-                        result)
-                  (funcall *parser* :consume)))
-               ;; ignored
-               (t (funcall *parser* :consume)))))
+    (flet ((step-fun ()
+             (let ((char (funcall *parser* :peek)))
+               (cond
+                 ((null char) :stop)
+                 ;; command
+                 ((case char
+                    ((#\M #\m) (push #\m result))
+                    ((#\L #\l) (push #\l result))
+                    ((#\C #\c) (push #\b result))
+                    ((#\Z #\z) (push #\c result)))
+                  (funcall *parser* :consume))
+                 ;; argument
+                 ((or (char-equal #\- char)
+                      (char-equal #\. char)
+                      (digit-char-p char))
+                  (let ((index (funcall *parser* :index))
+                        (dotp nil)
+                        (next nil))
+                    ;; peek next char
+                    (loop (setf next (funcall *parser* :peek 1))
+                          (when (or (null next)
+                                    (char-equal #\, next)
+                                    (char-equal #\- next)
+                                    (char-equal #\Space next)
+                                    (alpha-char-p next))
+                            (setf dotp nil)
+                            (return))
+                          (when (char-equal #\. next)
+                            (if (null dotp)
+                                (setf dotp t)
+                                (return)))
+                          (funcall *parser* :advance))
+                    ;; push numeric argument
+                    (push (read-from-string
+                           (subseq (funcall *parser* :string)
+                                   index
+                                   (1+ (funcall *parser* :index))))
+                          result)
+                    (funcall *parser* :consume)))
+                 ;; ignored
+                 (t (funcall *parser* :consume))))))
       (loop for i from 0 upto max-loop
-            for c = (step-fun (funcall *parser* :peek))
+            for c = (step-fun)
             when (eql :stop c)
               do (return t))
       (reverse result))))
