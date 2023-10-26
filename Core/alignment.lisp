@@ -17,6 +17,11 @@
                 collect (index batch) into indexes2
                 and collect (arg1 kara) into times2
               finally (return (values indexes2 times2)))
+      ;; Prevent null KARAOKE
+      (when (and (null indexes1)
+                 (null times1))
+        (push 0 indexes1)
+        (push 15 times1))
       (loop for time in times1
             for (index1 index2) on indexes1
             collect (prog1 (make-syllable (subseq string index1 index2)
