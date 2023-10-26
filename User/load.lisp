@@ -1,5 +1,9 @@
 (cl:in-package #:clarafx.user)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; External effects
+;;;
 (defvar *external-effects-pathname* (pathname "clarafx.lisp"))
 
 (defun current-effects-pathname ()
@@ -21,6 +25,7 @@
   (defpackage #:clarafx.load
     (:use #:common-lisp #:claraoke #:clarafx.draw #:clarafx.core)
     (:shadow #:defpackage
+             #:delete-file
              #:delete-package
              #:eval
              #:eval-when
@@ -29,6 +34,7 @@
              #:load
              #:make-package
              #:read-from-string
+             #:rename-file
              #:rename-package
              #:unuse-package
              #:use-package)))
