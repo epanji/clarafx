@@ -87,16 +87,20 @@
                 (funcall parser :consume))
                ;; string
                (#\"
-                (loop (case (funcall parser :peek 1)
-                        ((nil)
-                         (return))
-                        (#\"
-                         (if (char-equal #\\ (funcall parser :peek))
-                             (funcall parser :advance)
-                             (progn (funcall parser :advance)
-                                    (return)))))
-                      (funcall parser :advance))
-                (setf end (1+ (funcall parser :index)))
+                (case (funcall parser :peek -1)
+                  (#\\)
+                  (otherwise
+                   (loop (case (funcall parser :peek 1)
+                           ((nil)
+                            (return))
+                           (#\"
+                            (case (funcall parser :peek)
+                              (#\\)
+                              (otherwise
+                               (funcall parser :advance)
+                               (return)))))
+                         (funcall parser :advance))
+                   (setf end (1+ (funcall parser :index)))))
                 (funcall parser :consume))
                ;; terminal
                ((#\Space #\Tab #\Newline #\( #\')
