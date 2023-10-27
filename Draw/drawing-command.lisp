@@ -82,7 +82,7 @@
 
 (defun make-dc-lines (x1 y1 &rest xnyn)
   (let ((line (make-dc-line x1 y1))
-        (lines (loop for (x y) on xnyn by 'cddr
+        (lines (loop for (x y) on xnyn by #'cddr
                      collect (make-dc-line x y))))
     (list* line lines)))
 
@@ -139,7 +139,7 @@
   (let ((p1 (make-instance 'point :x x1 :y y1))
         (p2 (make-instance 'point :x x2 :y y2))
         (p3 (make-instance 'point :x x3 :y y3))
-        (pn (loop for (xn yn) on xnyn by 'cddr
+        (pn (loop for (xn yn) on xnyn by #'cddr
                   unless (or (null xn) (null yn))
                     collect (make-instance 'point :x xn :y yn)))
         (cubic-bsp (make-instance 'cubic-bsp)))
