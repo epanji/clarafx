@@ -108,21 +108,24 @@
                 (funcall parser :consume))
                ;; package
                (#\:
-                (loop (case (funcall parser :peek 1)
-                        (#\:
-                         (funcall parser :advance))
-                        (otherwise
-                         (return))))
                 (case (funcall parser :peek -1)
-                  ((#\Space #\Tab #\Newline #\( #\\))
+                  ((nil #\'))
                   (otherwise
-                   (if (> start end)
-                       (setf end start)
-                       (princ (subseq (funcall parser :string)
-                                      start end)
-                              output))
-                   (setf strip-p t)
-                   (setf start (1+ (funcall parser :index)))))
+                   (loop (case (funcall parser :peek 1)
+                           (#\:
+                            (funcall parser :advance))
+                           (otherwise
+                            (return))))
+                   (case (funcall parser :peek -1)
+                     ((#\Space #\Tab #\Newline #\( #\\))
+                     (otherwise
+                      (if (> start end)
+                          (setf end start)
+                          (princ (subseq (funcall parser :string)
+                                         start end)
+                                 output))
+                      (setf strip-p t)
+                      (setf start (1+ (funcall parser :index)))))))
                 (funcall parser :consume))
                ;; default
                (otherwise
