@@ -29,11 +29,11 @@
           (length (lines (events *sub2*))))))
 
 (test parse-drawing-commands
-  (let ((1str0 "m -5.4 4.3 l 3.2 -2.1 1.0 -0.1 1.2 -2.3 3.4 -4.5")
-        (1str1 "m-5.4 4.3l3.2-2.1 1.0-.1 1.2-2.3 3.4-4.5")
+  (let ((1str0 "m -5.4 4.3 l 3.2 -2.1 1.1 0.1 1.2 -2.3 3.4 -4.5")
+        (1str1 "m-5.4 4.3l3.2-2.1 1.1.1 1.2-2.3 3.4-4.5")
         (2str0 (format nil "(list~%(make-dc-move -5.4 4.3)~
                             ~%(make-dc-line 3.2 -2.1)~
-                            ~%(make-dc-line 1.0 -0.1)~
+                            ~%(make-dc-line 1.1 0.1)~
                             ~%(make-dc-line 1.2 -2.3)~
                             ~%(make-dc-line 3.4 -4.5))")))
     (is (typep (parse-drawing-commands 1str1) 'drawing-commands))
