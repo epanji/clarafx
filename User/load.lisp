@@ -77,13 +77,18 @@
                             (return))
                            (#\|
                             (funcall parser :advance)
-                            (when (char-equal #\# (funcall parser :peek 1))
-                              (funcall parser :advance)
-                              (return))))
-                         (funcall parser :advance)))
-                  (otherwise
-                   (funcall parser :advance)))
-                (setf end (1+ (funcall parser :index)))
+                            (case (funcall parser :peek 1)
+                              ((nil)
+                               (return))
+                              (#\#
+                               (funcall parser :advance)
+                               (return)))))
+                         (funcall parser :advance))
+                   (setf end (1+ (funcall parser :index))))
+                  (#\:
+                   (case (funcall parser :peek -1)
+                     ((#\Space #\Tab #\Newline #\( #\')
+                      (funcall parser :advance)))))
                 (funcall parser :consume))
                ;; string
                (#\"
@@ -112,10 +117,10 @@
                   ((nil #\'))
                   (otherwise
                    (loop (case (funcall parser :peek 1)
-                           (#\:
-                            (funcall parser :advance))
+                           (#\:)
                            (otherwise
-                            (return))))
+                            (return)))
+                         (funcall parser :advance))
                    (case (funcall parser :peek -1)
                      ((#\Space #\Tab #\Newline #\( #\\))
                      (otherwise
