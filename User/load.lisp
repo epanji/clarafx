@@ -23,7 +23,7 @@
 
 (when (null (find-package :clarafx.load))
   (defpackage #:clarafx.load
-    (:use #:common-lisp #:claraoke #:clarafx.draw #:clarafx.core)
+    (:use #:common-lisp #:clarafx)
     (:shadow #:defpackage
              #:delete-file
              #:delete-package
