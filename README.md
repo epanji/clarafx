@@ -96,6 +96,8 @@ _Example file [mysubfx3.lisp](Examples/mysubfx3.lisp)_
 
 (char-to-drawing-commands #\&)
 
+(char-to-drawing-commands #\⻰ :face (make-face* "WenQuanYi Zen Hei"))
+
 ```
 
 3. Drawing commands from SVG path
