@@ -164,7 +164,11 @@
                         (unless (null end)
                           (collect-commands)))))
              (collect-commands)
-             (setf (drawing-commands dcs) (reverse result))
+             (let ((true-result (reverse result)))
+               ;; check first element
+               (add-drawing-command dcs (first true-result))
+               ;; replace all elements
+               (setf (drawing-commands dcs) true-result))
              (values dcs))))
         (t (error "COMMANDS is not proper drawing commands."))))
 
