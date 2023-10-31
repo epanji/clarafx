@@ -72,18 +72,28 @@
                 (case (funcall parser :peek 1)
                   (#\|
                    (funcall parser :advance)
-                   (loop (case (funcall parser :peek 1)
-                           ((nil)
-                            (return))
-                           (#\|
-                            (funcall parser :advance)
-                            (case (funcall parser :peek 1)
-                              ((nil)
-                               (return))
-                              (#\#
-                               (funcall parser :advance)
-                               (return)))))
-                         (funcall parser :advance))
+                   ;; maybe nested
+                   (let ((level 0))
+                     (loop (case (funcall parser :peek 1)
+                             ((nil)
+                              (return))
+                             (#\#
+                              (funcall parser :advance)
+                              (case (funcall parser :peek 1)
+                                (#\|
+                                 (incf level))))
+                             (#\|
+                              (funcall parser :advance)
+                              (case (funcall parser :peek 1)
+                                ((nil)
+                                 (return))
+                                (#\#
+                                 (funcall parser :advance)
+                                 (case level
+                                   (0 (return))
+                                   (otherwise
+                                    (decf level)))))))
+                           (funcall parser :advance)))
                    (setf end (1+ (funcall parser :index))))
                   (#\:
                    (case (funcall parser :peek -1)
