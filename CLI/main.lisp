@@ -83,7 +83,7 @@
        :usage-of "clarafx")
       (opts:exit 0))
     (when (getf options :version nil)
-      (format t "SHOW THE VERSION.~%")
+      (format t "~A~%" (clarafx:clarafx-version))
       (opts:exit 0))
     (when (getf options :load nil)
       (clarafx:load-external-effects))

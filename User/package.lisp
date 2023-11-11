@@ -32,6 +32,7 @@
            #:canvas
            #:centiseconds
            #:char-to-drawing-commands
+           #:clarafx-version
            #:color
            #:colorp
            #:colorstring

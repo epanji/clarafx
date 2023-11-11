@@ -1,7 +1,7 @@
 (cl:in-package #:asdf-user)
 
 (defsystem "clarafx"
-  :version ""
+  :version (:read-file-form "version.lisp-expr")
   :author "Panji Kusuma <epanji@gmail.com>"
   :description "Read and write customize karaoke effects targeting ASS format. (Advanced Substation Alpha)"
   :license  "BSD 2-Clause License"
@@ -28,6 +28,7 @@
                 :pathname "User"
                 :serial t
                 :components ((:file "package")
+                             (:file "version")
                              (:file "load")
                              (:file "shapes")
                              (:file "effects")
