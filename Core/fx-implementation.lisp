@@ -12,17 +12,24 @@
               (,overrides (list (override 'alignment-numpad 0
                                           :arg1 1
                                           :modifiers ,modifiers))))
-         (list* (dialogue (plain-text ,var-name) :start (or (origin-start ,var-name) (start ,var-name))
-                                                 :end (or (origin-end ,var-name) (end ,dialogue))
-                                                 :layer (layer ,dialogue)
-                                                 :style (if (find-style ,subtitle ,style-name)
-                                                            (name (find-style ,subtitle ,style-name))
-                                                            (.style ,dialogue))
-                                                 :event-name (name ,dialogue)
-                                                 :event-margin-l (margin-l ,dialogue)
-                                                 :event-margin-r (margin-r ,dialogue)
-                                                 :event-margin-v (margin-v ,dialogue)
-                                                 :overrides ,overrides)
+         ;; When read subtitle effects from already parsed file, it
+         ;; will have different text due to CLARAOKE always trim every
+         ;; dialogues. To avoid differences, it is necessary to trim
+         ;; plain text when converting syllables to dialogues. It is
+         ;; safe because new dialogue does not need to be calculated
+         ;; like syllable.
+         (list* (dialogue (string-trim '(#\Space #\Tab) (plain-text ,var-name))
+                          :start (or (origin-start ,var-name) (start ,var-name))
+                          :end (or (origin-end ,var-name) (end ,dialogue))
+                          :layer (layer ,dialogue)
+                          :style (if (find-style ,subtitle ,style-name)
+                                     (name (find-style ,subtitle ,style-name))
+                                     (.style ,dialogue))
+                          :event-name (name ,dialogue)
+                          :event-margin-l (margin-l ,dialogue)
+                          :event-margin-r (margin-r ,dialogue)
+                          :event-margin-v (margin-v ,dialogue)
+                          :overrides ,overrides)
                 (extra-dialogues ,var-name))))))
 
 (defmacro define-effect ((name var) &body body)
