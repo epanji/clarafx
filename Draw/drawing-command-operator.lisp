@@ -42,15 +42,18 @@
           do (%resize item value target))))
 
 (defun resize-x (object value)
-  (%resize object (rationalize value) :x))
+  (%resize object (rationalize value) :x)
+  (values object))
 
 (defun resize-y (object value)
-  (%resize object (rationalize value) :y))
+  (%resize object (rationalize value) :y)
+  (values object))
 
 (defun resize-xy (object value1 &optional value2)
   (if (null value2)
       (%resize object (rationalize value1) :xy)
-      (%resize object (rationalize value1) (rationalize value2))))
+      (%resize object (rationalize value1) (rationalize value2)))
+  (values object))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -89,15 +92,18 @@
           do (%moving item value target))))
 
 (defun moving-x (object value)
-  (%moving object value :x))
+  (%moving object value :x)
+  (values object))
 
 (defun moving-y (object value)
-  (%moving object value :y))
+  (%moving object value :y)
+  (values object))
 
 (defun moving-xy (object value1 &optional value2)
   (if (null value2)
       (%moving object value1 :xy)
-      (%moving object value1 value2)))
+      (%moving object value1 value2))
+  (values object))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -131,13 +137,16 @@
           do (%negate item target))))
 
 (defun negate-x (object)
-  (%negate object :x))
+  (%negate object :x)
+  (values object))
 
 (defun negate-y (object)
-  (%negate object :y))
+  (%negate object :y)
+  (values object))
 
 (defun negate-xy (object)
-  (%negate object :xy))
+  (%negate object :xy)
+  (values object))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -171,13 +180,16 @@
           do (%round item target))))
 
 (defun round-x (object)
-  (%round object :x))
+  (%round object :x)
+  (values object))
 
 (defun round-y (object)
-  (%round object :y))
+  (%round object :y)
+  (values object))
 
 (defun round-xy (object)
-  (%round object :xy))
+  (%round object :xy)
+  (values object))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
