@@ -90,7 +90,8 @@
     (when (getf options :supersede nil)
       (setf efile :supersede))
     (when (getf options :output nil)
-      (when (probe-file ofile)
+      (when (and (eql :error efile)
+                 (probe-file ofile))
         (format t "Error: Output file already exists. ~S~%"
                 (namestring ofile))
         (opts:exit 1)))
