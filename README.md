@@ -108,4 +108,59 @@ _Example file [mysubfx3.lisp](Examples/mysubfx3.lisp)_
 
 ```
 
+## CLI
+
+Write effects from file that already have clarafx information.
+
+```sh
+$ clarafx -i input.ass -o output.ass
+```
+
+Help message:
+
+```sh
+Usage: clarafx [-h] [-v] [-s] [-l] [-i <file>] [-o <file>]
+
+Available options:
+  -h        Show this help message.
+  -v        Show version.
+  -s        Supersede output if it already exists.
+  -l        Load external effects. [From: $PWD/clarafx.lisp | $HOME/.config/clarafx/clarafx.lisp]
+  -i <file> Input file.ass which has effects information.
+  -o <file> Output file.ass for final subtitle effects according to input. [Default: stdout]
+```
+
+# Tests
+
+```txt
+
+Running test suite INTERN-SUITE
+ Running test STRIP-PACKAGE-FROM-SYMBOL ................
+ Running test SPLIT-ELEMENT-DRAWING-COMMANDS ....
+ Running test SVG-DATA-TO-ELEMENT-DRAWING-COMMANDS ....
+ Did 24 checks.
+    Pass: 24 (100%)
+    Skip: 0 ( 0%)
+    Fail: 0 ( 0%)
+
+
+Running test suite EXTERN-SUITE
+ Running test PARSE-EFFECT ..
+ Running test PARSE-DRAWING-COMMANDS ...
+ Running test RESIZE-DRAWING-COMMANDS ........
+ Running test MOVING-DRAWING-COMMANDS ........
+ Running test NEGATE-DRAWING-COMMANDS ...
+ Running test ROUND-DRAWING-COMMANDS ...
+ Running test MINMAX-DRAWING-COMMANDS .........
+ Running test ROTATE-DRAWING-COMMANDS ......
+ Did 42 checks.
+    Pass: 42 (100%)
+    Skip: 0 ( 0%)
+    Fail: 0 ( 0%)
+
+```
+
+# License
+
+[BSD 2-Clause License](LICENSE)
 
