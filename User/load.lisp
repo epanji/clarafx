@@ -32,6 +32,7 @@
              #:find-package
              #:in-package
              #:load
+             #:load-external-effects
              #:make-package
              #:read-from-string
              #:rename-file
