@@ -133,6 +133,8 @@
 ;;;
 ;;; Others
 ;;;
+(defvar *faces* (make-hash-table :test 'equalp))
+
 (defun make-canvas-face (canvas)
   (declare (type canvas canvas))
   (with-accessors ((name fontname)
@@ -141,5 +143,14 @@
                    (italic italic)
                    (dpi dpi))
       canvas
-    (make-face* name :bold bold :italic italic :fontsize size :dpi dpi)))
+    ;; Minimize faces creation by looking up face in hash table
+    (let* ((key (format nil "~A~A~A~A~A" name bold italic size dpi))
+           (face (gethash key *faces* nil)))
+      (when (null face)
+        (setf face (make-face* name :bold bold
+                                    :italic italic
+                                    :fontsize size
+                                    :dpi dpi))
+        (setf (gethash key *faces*) face))
+      (values face))))
 
