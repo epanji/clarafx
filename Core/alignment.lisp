@@ -269,7 +269,7 @@
                     ;; xcnt
                     (setf xcnt (+ xcnt (width syllable))))))
                ((2 :center-bottom :bottom-center)
-                (let ((xmin (- (truncate (width canvas) 2) (truncate total-width 2)))
+                (let ((xmin (+ (truncate (- (margin-left canvas) (margin-right canvas)) 2) (- (truncate (width canvas) 2) (truncate total-width 2))))
                       (ymax (- (height canvas) (margin-bottom canvas)))
                       (xcnt 0))
                   (dolist (syllable syllables)
@@ -302,7 +302,7 @@
                     ;; xcnt
                     (setf xcnt (+ xcnt (width syllable))))))
                ((5 :center-middle :middle-center)
-                (let ((xmin (- (truncate (width canvas) 2) (truncate total-width 2)))
+                (let ((xmin (+ (truncate (- (margin-left canvas) (margin-right canvas)) 2) (- (truncate (width canvas) 2) (truncate total-width 2))))
                       (ymax (truncate (height canvas) 2))
                       (xcnt 0))
                   (dolist (syllable syllables)
@@ -335,7 +335,7 @@
                     ;; xcnt
                     (setf xcnt (+ xcnt (width syllable))))))
                ((8 :center-top :top-center)
-                (let ((xmin (- (truncate (width canvas) 2) (truncate total-width 2)))
+                (let ((xmin (+ (truncate (- (margin-left canvas) (margin-right canvas)) 2) (- (truncate (width canvas) 2) (truncate total-width 2))))
                       (ymax (margin-top canvas))
                       (xcnt 0))
                   (dolist (syllable syllables)
