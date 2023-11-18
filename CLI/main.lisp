@@ -69,10 +69,16 @@
     (opts:get-opts)))
 
 (defun main ()
-  (let ((options (get-options))
+  (declare (optimize (speed 3)))
+  (let ((options nil)
+        (fargs nil)
         (ifile nil)
         (ofile nil)
         (efile :error))
+    (multiple-value-setq (options fargs) (get-options))
+    (unless (null fargs)
+      (opts:describe :usage-of "clarafx" :brief t)
+      (opts:exit 1))
     (setf ifile (getf options :input))
     (setf ofile (getf options :output))
     (when (getf options :help nil)
@@ -99,5 +105,6 @@
       (let ((sub (clarafx:read-subtitle-effect ifile)))
         (if (pathnamep ofile)
             (clarafx:write-subtitle-effect sub ofile efile)
-            (clarafx:print-script sub *standard-output*))))))
+            (clarafx:print-script sub *standard-output*))))
+    (opts:exit 0)))
 
