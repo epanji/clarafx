@@ -10,7 +10,7 @@
 
 (define-effect (complement-effect-syllables var)
   (progn (setf (origin-start var) (start (dialogue var))
-               (origin-end var) (start var))
+               (origin-end var) (1+ (start var)))
          (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var)))
   (modifier 'color1 :arg1 (secondary-colour (style var))))
 
