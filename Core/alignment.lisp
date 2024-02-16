@@ -36,6 +36,10 @@
   (declare (type canvas canvas))
   (- (width canvas) (+ (margin-right canvas) (margin-left canvas))))
 
+(defun calculate-layout-height (canvas)
+  (declare (type canvas canvas))
+  (- (height canvas) (+ (margin-top canvas) (margin-bottom canvas))))
+
 (defun force-split-indexes (object)
   (declare (type (or list claraoke-subtitle:dialogue) object))
   (let ((overrides (if (listp object) object (overrides object))))
@@ -72,7 +76,8 @@
             (incf end))
       (reverse result))))
 
-(defun split-dialogue-multiple-line (object &key layout-width (fontspace 0) (face *face*))
+(defun split-dialogue-multiple-line
+    (object &key layout-width verticalp (fontspace 0) (face *face*))
   (declare (type claraoke-subtitle:dialogue object)
            (type integer layout-width))
   ;; Duplicate first to avoid mutations
@@ -86,9 +91,14 @@
         (counter1 0))
     (loop with counter2 = 0
           for (start2 end2 mark) in (newline-and-space-splitter object)
-          for string-width = (string-pixel-width (subseq string1 counter2 end2)
-                                                 :fontspace fontspace
-                                                 :face face)
+          for string-width = (let ((new-string (subseq string1 counter2 end2)))
+                               (if verticalp
+                                   (+ (* (string-pixel-height new-string :face face)
+                                         (length new-string))
+                                      (* fontspace (length new-string)))
+                                   (string-pixel-width new-string
+                                                       :fontspace fontspace
+                                                       :face face)))
           when (or (> string-width layout-width)
                    (eql mark :force)
                    (= end2 (length string1)))
@@ -100,7 +110,7 @@
                       ;; Filter overrides
                       (let ((string2 (subseq string1 counter2 (if (eql mark :force)
                                                                   start2
-                                                                  (1- start2))))
+                                                                  (max 0 (1- start2)))))
                             (overrides2 (remove-if
                                          (lambda (index)
                                            (not (< (1- counter2) index start2)))
@@ -129,17 +139,22 @@
                                   do (incf counter1 (arg1 kara))
                                      (setf ktime (arg1 kara)))))))))
 
-(defun split-dialogue (object &key layout-width (fontspace 0) (face *face*))
+(defun split-dialogue (object &key layout-width verticalp (fontspace 0) (face *face*))
   (declare (type claraoke-subtitle:dialogue object))
   (let* ((string (.text (.text object)))
-         (string-width (string-pixel-width string :fontspace fontspace :face face))
+         (string-width (if verticalp
+                           (+ (* (string-pixel-height string :face face)
+                                 (length string))
+                              (* fontspace (length string)))
+                           (string-pixel-width string :fontspace fontspace :face face)))
          (dialogues (list object)))
     (when (or (and (integerp layout-width)
                    (> string-width layout-width))
               (not (null (force-split-indexes object))))
       (setf dialogues (split-dialogue-multiple-line object :layout-width layout-width
                                                            :fontspace fontspace
-                                                           :face face)))
+                                                           :face face
+                                                           :verticalp verticalp)))
     (loop for dialogue in dialogues
           for line from 0
           collect (split-dialogue-single-line dialogue :line line
@@ -231,129 +246,29 @@
     (make-alignment code canvas dialogue)))
 
 (defun make-alignment (code canvas dialogue)
-  (let ((layout-width (calculate-layout-width canvas))
+  (let ((layout-width (if (digit-char-p (alignment-code code) 10)
+                          (calculate-layout-width canvas)
+                          (calculate-layout-height canvas)))
         (fontspace (fontspace canvas))
         (face (make-canvas-face canvas)))
-    (make-instance 'alignment
-                   :an code
-                   :canvas canvas
-                   :line-syllables
-                   (split-dialogue dialogue :layout-width layout-width
-                                            :fontspace fontspace
-                                            :face face))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Virtual alignment
-;;;
-(defun calculate-virtual-alignment-1 (alignment)
-  "Calculate coordinates every syllables with origin equal to {\\an1}"
-  (with-accessors ((an alignment-code)
-                   (canvas canvas)
-                   (lines line-syllables))
-      alignment
-    (loop with below-line = (1- (length lines))
-          for syllables in lines
-          for total-width = (loop for syllable in syllables
-                                  sum (width syllable))
-          do (ecase an
-               ((1 :left-bottom :bottom-left)
-                (let ((xmin (margin-left canvas))
-                      (ymax (- (height canvas) (margin-bottom canvas)))
-                      (xcnt 0))
-                  (dolist (syllable syllables)
-                    (setf (point-x1 syllable) (+ xmin xcnt))
-                    (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (- ymax (* (- (1+ below-line) (line syllable)) (height syllable))))
-                    (setf (point-y2 syllable) (- ymax (* (- below-line (line syllable)) (height syllable))))
-                    ;; xcnt
-                    (setf xcnt (+ xcnt (width syllable))))))
-               ((2 :center-bottom :bottom-center)
-                (let ((xmin (+ (truncate (- (margin-left canvas) (margin-right canvas)) 2) (- (truncate (width canvas) 2) (truncate total-width 2))))
-                      (ymax (- (height canvas) (margin-bottom canvas)))
-                      (xcnt 0))
-                  (dolist (syllable syllables)
-                    (setf (point-x1 syllable) (+ xmin xcnt))
-                    (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (- ymax (* (- (1+ below-line) (line syllable)) (height syllable))))
-                    (setf (point-y2 syllable) (- ymax (* (- below-line (line syllable)) (height syllable))))
-                    ;; xcnt
-                    (setf xcnt (+ xcnt (width syllable))))))
-               ((3 :right-bottom :bottom-right)
-                (let ((xmin (- (width canvas) (margin-right canvas) total-width))
-                      (ymax (- (height canvas) (margin-bottom canvas)))
-                      (xcnt 0))
-                  (dolist (syllable syllables)
-                    (setf (point-x1 syllable) (+ xmin xcnt))
-                    (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (- ymax (* (- (1+ below-line) (line syllable)) (height syllable))))
-                    (setf (point-y2 syllable) (- ymax (* (- below-line (line syllable)) (height syllable))))
-                    ;; xcnt
-                    (setf xcnt (+ xcnt (width syllable))))))
-               ((4 :left-middle :middle-left)
-                (let ((xmin (margin-left canvas))
-                      (ymax (truncate (height canvas) 2))
-                      (xcnt 0))
-                  (dolist (syllable syllables)
-                    (setf (point-x1 syllable) (+ xmin xcnt))
-                    (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (+ (- ymax  (truncate (* (1+ below-line) (height syllable)) 2)) (* (line syllable) (height syllable))))
-                    (setf (point-y2 syllable) (+ (- ymax  (truncate (* (1+ below-line) (height syllable)) 2)) (* (1+ (line syllable)) (height syllable))))
-                    ;; xcnt
-                    (setf xcnt (+ xcnt (width syllable))))))
-               ((5 :center-middle :middle-center)
-                (let ((xmin (+ (truncate (- (margin-left canvas) (margin-right canvas)) 2) (- (truncate (width canvas) 2) (truncate total-width 2))))
-                      (ymax (truncate (height canvas) 2))
-                      (xcnt 0))
-                  (dolist (syllable syllables)
-                    (setf (point-x1 syllable) (+ xmin xcnt))
-                    (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (+ (- ymax  (truncate (* (1+ below-line) (height syllable)) 2)) (* (line syllable) (height syllable))))
-                    (setf (point-y2 syllable) (+ (- ymax  (truncate (* (1+ below-line) (height syllable)) 2)) (* (1+ (line syllable)) (height syllable))))
-                    ;; xcnt
-                    (setf xcnt (+ xcnt (width syllable))))))
-               ((6 :right-middle :middle-right)
-                (let ((xmin (- (width canvas) (margin-right canvas) total-width))
-                      (ymax (truncate (height canvas) 2))
-                      (xcnt 0))
-                  (dolist (syllable syllables)
-                    (setf (point-x1 syllable) (+ xmin xcnt))
-                    (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (+ (- ymax  (truncate (* (1+ below-line) (height syllable)) 2)) (* (line syllable) (height syllable))))
-                    (setf (point-y2 syllable) (+ (- ymax  (truncate (* (1+ below-line) (height syllable)) 2)) (* (1+ (line syllable)) (height syllable))))
-                    ;; xcnt
-                    (setf xcnt (+ xcnt (width syllable))))))
-               ((7 :left-top :top-left)
-                (let ((xmin (margin-left canvas))
-                      (ymax (margin-top canvas))
-                      (xcnt 0))
-                  (dolist (syllable syllables)
-                    (setf (point-x1 syllable) (+ xmin xcnt))
-                    (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (+ ymax (* (line syllable) (height syllable))))
-                    (setf (point-y2 syllable) (+ ymax (* (1+ (line syllable)) (height syllable))))
-                    ;; xcnt
-                    (setf xcnt (+ xcnt (width syllable))))))
-               ((8 :center-top :top-center)
-                (let ((xmin (+ (truncate (- (margin-left canvas) (margin-right canvas)) 2) (- (truncate (width canvas) 2) (truncate total-width 2))))
-                      (ymax (margin-top canvas))
-                      (xcnt 0))
-                  (dolist (syllable syllables)
-                    (setf (point-x1 syllable) (+ xmin xcnt))
-                    (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (+ ymax (* (line syllable) (height syllable))))
-                    (setf (point-y2 syllable) (+ ymax (* (1+ (line syllable)) (height syllable))))
-                    ;; xcnt
-                    (setf xcnt (+ xcnt (width syllable))))))
-               ((9 :right-top :top-right)
-                (let ((xmin (- (width canvas) (margin-right canvas) total-width))
-                      (ymax (margin-top canvas))
-                      (xcnt 0))
-                  (dolist (syllable syllables)
-                    (setf (point-x1 syllable) (+ xmin xcnt))
-                    (setf (point-x2 syllable) (+ (width syllable) xmin xcnt))
-                    (setf (point-y1 syllable) (+ ymax (* (line syllable) (height syllable))))
-                    (setf (point-y2 syllable) (+ ymax (* (1+ (line syllable)) (height syllable))))
-                    ;; xcnt
-                    (setf xcnt (+ xcnt (width syllable))))))))))
+    (make-instance
+     'alignment
+     :an code
+     :canvas canvas
+     :line-syllables
+     (split-dialogue
+      dialogue
+      :layout-width layout-width
+      :fontspace fontspace
+      :face face
+      :verticalp
+      (case (alignment-code code)
+        ((#\A
+          #\B #\C
+          #\D #\E #\F
+          #\G #\H #\I
+          #\J #\K
+          #\L)
+         t)
+        (otherwise nil))))))
 

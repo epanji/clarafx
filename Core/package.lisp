@@ -3,6 +3,7 @@
 (defpackage #:clarafx.core
   (:use #:common-lisp #:claraoke #:clarafx.draw)
   (:intern #:%string-pixel-width
+           #:calculate-layout-height
            #:calculate-layout-width
            #:calculate-virtual-alignment-1
            #:ensure-font

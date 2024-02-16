@@ -22,6 +22,8 @@
                              (:file "font-ffi")
                              (:file "canvas")
                              (:file "alignment")
+                             (:file "alignment-code")
+                             (:file "alignment-calculation")
                              (:file "fx-implementation")
                              (:file "drawing-command-ffi")))
                (:module "clarafx.user"
