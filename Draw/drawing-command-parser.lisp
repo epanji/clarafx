@@ -67,7 +67,7 @@
                       (char-equal #\. char)
                       (digit-char-p char))
                   (let ((index (funcall *parser* :index))
-                        (dotp nil)
+                        (dotp (char-equal #\. char))
                         (next nil))
                     ;; peek next char
                     (loop (setf next (funcall *parser* :peek 1))
@@ -204,7 +204,7 @@
                       (char-equal #\. char)
                       (digit-char-p char))
                   (let ((index (funcall *parser* :index))
-                        (dotp nil)
+                        (dotp (char-equal #\. char))
                         (next nil))
                     ;; peek next char
                     (loop (setf next (funcall *parser* :peek 1))
