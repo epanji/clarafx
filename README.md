@@ -108,6 +108,14 @@ _Example file [mysubfx3.lisp](Examples/mysubfx3.lisp)_
 
 ```
 
+## Vertical Alignment
+
+Add more options for alignment numpad with vertical alignment.
+
+_Example file [mysubfx4.lisp](Examples/mysubfx4.lisp)_
+
+![FX4](Examples/mysubfx4.gif)
+
 ## CLI
 
 Write effects from file that already have clarafx information.
