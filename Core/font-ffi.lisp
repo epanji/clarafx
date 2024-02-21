@@ -24,16 +24,20 @@
 ;;;   (:oblique 110))
 ;;;
 (defun ensure-font (family-name &key bold italic)
-  (let ((w (cond ((null bold) nil)
-                 ((eql t bold) :bold)
-                 ((and (integerp bold) (zerop bold)) :regular)
-                 ((and (integerp bold) (= -1 bold)) :bold)
-                 (t bold)))
-        (s (cond ((null italic) nil)
-                 ((eql t italic) :italic)
-                 ((and (integerp italic) (zerop italic)) :roman)
-                 ((and (integerp italic) (= -1 italic)) :italic)
-                 (t italic))))
+  (let ((w (case bold
+             ((nil) nil)
+             ((t -1 1) :bold)
+             (0 :regular)
+             (otherwise (typecase bold
+                          ((or keyword integer) bold)
+                          (otherwise nil)))))
+        (s (case italic
+             ((nil) nil)
+             ((t -1 1) :italic)
+             (0 :roman)
+             (otherwise (typecase italic
+                          ((or keyword integer) italic)
+                          (otherwise nil))))))
     (org.shirakumo.font-discovery:find-font
      :family family-name :weight w :slant s)))
 
@@ -50,12 +54,11 @@
 
 (defun set-char-size (face &key (fontsize 36) (dpi 64))
   (freetype2:set-char-size face (* fontsize 64) 0 dpi dpi)
-  face)
+  (values face))
 
 (defun make-face* (family-name &key bold italic (fontsize 36) (dpi 64))
   (let ((face (make-face family-name :bold bold :italic italic)))
-    (set-char-size face :fontsize fontsize :dpi dpi)
-    face))
+    (set-char-size face :fontsize fontsize :dpi dpi)))
 
 (defvar *face* (make-face* "Not exists"))
 
