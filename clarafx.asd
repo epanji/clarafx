@@ -34,6 +34,7 @@
                              (:file "load")
                              (:file "shapes")
                              (:file "effects")
+                             (:file "dialogue")
                              (:file "file-io")))
                (:module "clarafx.cli"
                 :pathname "CLI"
