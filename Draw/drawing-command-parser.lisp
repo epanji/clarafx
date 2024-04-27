@@ -264,7 +264,7 @@
     (if (null result)
         (unless (null report)
           (format t "~{~&~A~%~}" report))
-        (let ((dcs (make-instance 'drawing-commands )))
+        (let ((dcs (make-instance 'drawing-commands)))
           (setf (drawing-commands dcs) result)
           (if (null rawp)
               (drawing-commands-string dcs)
