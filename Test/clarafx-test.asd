@@ -8,5 +8,6 @@
   :components ((:file "package")
                (:file "suites")
                (:file "intern-tests")
-               (:file "extern-tests")))
+               (:file "extern-tests")
+               (:file "dialogue-tests")))
 
