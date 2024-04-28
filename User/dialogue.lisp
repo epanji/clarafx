@@ -8,9 +8,10 @@
   (declare (type claraoke-text:text text))
   (let ((plain (.text text))
         (char-bag '(#\Space #\Tab #\Newline)))
-    ;; Insert karaoke with previous values at the end of not
-    ;; white-space character for every syllables and make zero karaoke
-    ;; for existing one.
+    ;; Change karaoke value to 0 and insert karaoke with previous
+    ;; value at the end of non white-space character for every
+    ;; syllables. Unchanged values could be happened due to same
+    ;; indexes.
     (loop with prev = (length plain)
           for override in (reverse (overrides text))
           for curr = (index override)
@@ -19,15 +20,15 @@
           unless (null kara)
             do (let ((ktime (arg1 kara))
                      (char (char plain (max 0 (1- prev)))))
+                 (insert-karaoke text curr 0)
                  (if (member char char-bag)
                      (insert-karaoke text (max 0 (- prev 2)) ktime)
                      (insert-karaoke text (max 0 (- prev 1)) ktime))
-                 (setf prev curr)
-                 (insert-karaoke text curr 0)))
+                 (setf prev curr)))
     ;; Populate zero karaoke for every characters without karaoke
     ;; except white-space.
-    (loop for index from 0 upto (1- (length plain))
-          for overrides = (overrides text)
+    (loop with overrides = (overrides text)
+          for index from 0 upto (1- (length plain))
           for kara = (let (override)
                        (and (setf override (find-override overrides index))
                             (typep override 'claraoke-text:batch)
@@ -40,7 +41,7 @@
 
 (defgeneric populate-zero-karaoke (object)
   (:documentation "Make every characters have zero karaoke except
-white-space and last character in syllables."))
+white-space and last non white-space character in syllables."))
 
 (defmethod populate-zero-karaoke ((object claraoke-text:text))
   (%populate-zero-karaoke object)
