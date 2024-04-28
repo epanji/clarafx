@@ -166,6 +166,14 @@ Running test suite EXTERN-SUITE
     Skip: 0 ( 0%)
     Fail: 0 ( 0%)
 
+
+Running test suite DIALOGUE-SUITE
+ Running test POPULATE-ZERO-KARAOKE ....
+ Did 4 checks.
+    Pass: 4 (100%)
+    Skip: 0 ( 0%)
+    Fail: 0 ( 0%)
+
 ```
 
 # License
