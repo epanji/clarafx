@@ -172,7 +172,7 @@
                     (setf (point-x2 syllable) (+ (- xmax  (truncate (* (1+ below-line) (height syllable)) 2)) (* (1+ (line syllable)) (height syllable))))
                     ;; ycnt
                     (setf ycnt (+ ycnt (height syllable) fontspace)))))
-               (#\F                     ;x
+               (#\F
                 (let ((ymin (+ (truncate (- (margin-top canvas) (margin-bottom canvas)) 2) (- (truncate (height canvas) 2) (truncate total-advance 2))))
                       (xmax (- (width canvas) (margin-right canvas)))
                       (ycnt 0))
@@ -194,7 +194,7 @@
                     (setf (point-x2 syllable) (+ xmax (* (- (1+ below-line) (line syllable)) (height syllable))))
                     ;; ycnt
                     (setf ycnt (+ ycnt (height syllable) fontspace)))))
-               (#\H                     ;x
+               (#\H
                 (let ((ymin (margin-top canvas))
                       (xmax (truncate (width canvas) 2))
                       (ycnt 0))
