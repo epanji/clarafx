@@ -7,12 +7,12 @@
 (defvar *parser* nil)
 
 (defun make-parser (string)
-  (declare (type (simple-array character) string) (optimize (speed 3)))
+  (declare (type simple-array string) (optimize (speed 3)))
   ;; Base variables
   (let ((ori-string string)
         (ori-length (length string))
         (ori-index 0))
-    (declare (type (simple-array character) ori-string)
+    (declare (type simple-array ori-string)
              (type fixnum ori-length ori-index))
     ;; Base functions
     (labels ((index-validp (&optional (n 0))
