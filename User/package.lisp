@@ -265,5 +265,6 @@
            #:width
            #:with-every-syllable-from-karaoke
            #:with-syllable-modifiers
-           #:write-subtitle-effect))
+           #:write-subtitle-effect
+           #:write-subtitle-file))
 
