@@ -48,7 +48,7 @@
                         (claraoke-text:batch
                          (let ((newline (find-modifier override 'newline)))
                            (unless (null newline)
-                             (index newline))))
+                             (index override))))
                         (claraoke-text:newline
                          (index override)))
           unless (null index)
