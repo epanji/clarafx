@@ -64,4 +64,55 @@ white-space and last non white-space character in syllables."))
 (defmethod populate-zero-karaoke ((object claraoke-subtitle:subtitle))
   (populate-zero-karaoke (events object))
   (values))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Populate delay effect
+;;;
+(defun %populate-delay-effect (text &optional delay)
+  (declare (type claraoke-text:text text))
+  (let ((delay (or delay 15))
+        (plain (.text text))
+        (overrides (overrides text))
+        (char #\INVISIBLE_SEPARATOR))
+    ;; Check first character
+    (unless (char= char (char plain 0))
+      ;; Add invisible separator for index 0
+      (setf (.text text) (concatenate 'string (string char) plain))
+      ;; Increase indexes for each overrides
+      (loop for override in overrides
+            do (incf (index override) 1))
+      (insert-override text (override 'karaoke 0 :arg1 delay)))
+    (values)))
+
+(defgeneric populate-delay-effect (object &optional delay)
+  (:documentation "Add invisible separator and karaoke modifier for
+  index 0 after increasing other indexes."))
+
+(defmethod populate-delay-effect
+    ((object claraoke-text:text) &optional delay)
+  (%populate-delay-effect object delay)
+  (values))
+
+(defmethod populate-delay-effect
+    ((object claraoke-subtitle:dialogue) &optional delay)
+  (populate-delay-effect (.text object) delay)
+  (values))
+
+(defmethod populate-delay-effect
+    ((object cons) &optional delay)
+  (loop for dialogue in object
+        when (typep dialogue 'claraoke-subtitle:dialogue)
+          do (populate-delay-effect dialogue delay))
+  (values))
+
+(defmethod populate-delay-effect
+    ((object claraoke-subtitle:events) &optional delay)
+  (populate-delay-effect (lines object) delay)
+  (values))
+
+(defmethod populate-delay-effect
+    ((object claraoke-subtitle:subtitle) &optional delay)
+  (populate-delay-effect (events object) delay)
+  (values))
 

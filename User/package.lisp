@@ -215,6 +215,7 @@
            #:point-x2
            #:point-y1
            #:point-y2
+           #:populate-delay-effect
            #:populate-zero-karaoke
            #:primary-colour
            #:print-script

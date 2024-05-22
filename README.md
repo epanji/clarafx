@@ -169,8 +169,9 @@ Running test suite EXTERN-SUITE
 
 Running test suite DIALOGUE-SUITE
  Running test POPULATE-ZERO-KARAOKE ....
- Did 4 checks.
-    Pass: 4 (100%)
+ Running test POPULATE-DELAY-EFFECT ......
+ Did 10 checks.
+    Pass: 10 (100%)
     Skip: 0 ( 0%)
     Fail: 0 ( 0%)
 

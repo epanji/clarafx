@@ -193,6 +193,7 @@
    (canvas :accessor canvas :initform nil)
    (origin-start :accessor origin-start :initform nil)
    (origin-end :accessor origin-end :initform nil)
+   (invisiblep :initarg :invisiblep :reader invisiblep :initform nil)
    (extra-dialogues :accessor extra-dialogues :initform '()))
   (:documentation "Drawable area with alignment inside canvas."))
 
@@ -207,6 +208,8 @@
                  :h (string-pixel-height string :face face)
                  :w (string-pixel-width string :fontspace fontspace :face face)
                  :plain-text string
+                 :invisiblep (and (= 1 (length string))
+                                  (char= #\INVISIBLE_SEPARATOR (char string 0)))
                  :start start
                  :duration duration
                  :line line))
