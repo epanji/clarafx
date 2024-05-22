@@ -13,7 +13,7 @@
     ;; syllables. Unchanged values could be happened due to same
     ;; indexes.
     (loop with prev = (length plain)
-          for override in (reverse (overrides text))
+          for override in (stable-sort (copy-seq (overrides text)) '> :key 'index)
           for curr = (index override)
           and kara = (and (typep override 'claraoke-text:batch)
                           (increase-karaoke override 0))
