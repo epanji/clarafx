@@ -82,12 +82,15 @@ white-space and last non white-space character in syllables."))
       ;; Increase indexes for each overrides
       (loop for override in overrides
             do (incf (index override) 1))
-      (insert-override text (override 'karaoke 0 :arg1 delay)))
+      (insert-override text (override 'karaoke 0 :arg1 (abs delay))))
     (values)))
 
 (defgeneric populate-delay-effect (object &optional delay)
-  (:documentation "Add invisible separator and karaoke modifier for
-  index 0 after increasing other indexes."))
+  (:documentation "Add invisible separator for first character in plain text.
+Increase current indexes and add karaoke modifier for override with index 0.
+- DELAY could be positive or negative integer.
+- Negative DELAY will decrease start slot if exists.
+- KARAOKE always have positive value."))
 
 (defmethod populate-delay-effect
     ((object claraoke-text:text) &optional delay)
@@ -97,6 +100,8 @@ white-space and last non white-space character in syllables."))
 (defmethod populate-delay-effect
     ((object claraoke-subtitle:dialogue) &optional delay)
   (populate-delay-effect (.text object) delay)
+  (when (and (integerp delay) (minusp delay))
+    (decrease-duration (start object) (abs delay)))
   (values))
 
 (defmethod populate-delay-effect
