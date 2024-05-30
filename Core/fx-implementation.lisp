@@ -4,6 +4,10 @@
 ;;;
 ;;; Define Effect
 ;;;
+(declaim (type boolean *ignore-partial*))
+
+(defvar *ignore-partial* nil "Boolean to ignore partial effect.")
+
 (defmacro with-syllable-modifiers ((var-name dialogue subtitle alignment-code style-name dpi) &body body)
   (let ((modifiers (gensym "WSM"))
         (overrides (gensym "WSM")))
@@ -19,24 +23,30 @@
          ;; safe because new dialogue does not need to be calculated
          ;; like syllable.
          (unless (invisiblep ,var-name)
-           (list* (dialogue (string-trim '(#\Space #\Tab) (plain-text ,var-name))
-                            :start (or (origin-start ,var-name) (start ,var-name))
-                            :end (or (origin-end ,var-name) (end ,dialogue))
-                            :layer (layer ,dialogue)
-                            :style (if (find-style ,subtitle ,style-name)
-                                       (name (find-style ,subtitle ,style-name))
-                                       (.style ,dialogue))
-                            :event-name (name ,dialogue)
-                            :event-margin-l (margin-l ,dialogue)
-                            :event-margin-r (margin-r ,dialogue)
-                            :event-margin-v (margin-v ,dialogue)
-                            :overrides ,overrides)
-                  (extra-dialogues ,var-name)))))))
+           (when (or *ignore-partial* (partialp ,var-name))
+             (list* (dialogue (string-trim '(#\Space #\Tab) (plain-text ,var-name))
+                              :start (or (origin-start ,var-name) (start ,var-name))
+                              :end (or (origin-end ,var-name) (end ,dialogue))
+                              :layer (layer ,dialogue)
+                              :style (if (find-style ,subtitle ,style-name)
+                                         (name (find-style ,subtitle ,style-name))
+                                         (.style ,dialogue))
+                              :event-name (name ,dialogue)
+                              :event-margin-l (margin-l ,dialogue)
+                              :event-margin-r (margin-r ,dialogue)
+                              :event-margin-v (margin-v ,dialogue)
+                              :overrides ,overrides)
+                    (extra-dialogues ,var-name))))))))
 
 (defmacro define-effect ((name var) &body body)
-  `(defun ,name (dialogue &key subtitle (alignment-code 2) (style-name "Default") (dpi 64))
-     (with-syllable-modifiers (,var dialogue subtitle alignment-code style-name dpi)
-       ,@body)))
+  `(defun ,name (dialogue &key subtitle
+                            (alignment-code 2)
+                            (style-name "Default")
+                            (dpi 64)
+                            (ignore-partial t))
+     (let ((*ignore-partial* (or ignore-partial (not (find-partial dialogue)))))
+       (with-syllable-modifiers (,var dialogue subtitle alignment-code style-name dpi)
+         ,@body))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -89,11 +99,14 @@ Dialogue: 1st,2nd,3rd,4th,5th,6th,7th,8th,clarafx-<number>,10th
              (alignment-code (or (fourth effect-info-list) 2))
              (effect (find-effect effect-name))
              (complement-effect (when (null (fifth effect-info-list))
-                                  (find-effect "complement"))))
+                                  (if (find-partial dialogue)
+                                      (find-effect "complement-partial")
+                                      (find-effect "complement")))))
         (unless (null effect)
           ;; Return splitted dialogues
           (prog1 (append (funcall effect dialogue
                                   :subtitle subtitle
+                                  :ignore-partial nil
                                   :style-name style-name
                                   :dpi dpi
                                   :alignment-code alignment-code)
@@ -137,5 +150,5 @@ If OBJECT argument is SUBTITLE object, it will return mutated OBJECT."))
     (unless (null generated-effects)
       (setf (lines (events object))
             (append (lines (events object)) generated-effects)))
-    object))
+    (values object)))
 

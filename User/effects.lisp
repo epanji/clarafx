@@ -14,6 +14,14 @@
          (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var)))
   (modifier 'color1 :arg1 (secondary-colour (style var))))
 
+(define-effect (complement-partial-effect-syllables var)
+  (progn (setf (origin-start var) (start (dialogue var))
+               (origin-end var) (if (partialp var)
+                                    (1+ (start var))
+                                    (end (dialogue var))))
+         (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var)))
+  (modifier 'color1 :arg1 (secondary-colour (style var))))
+
 (define-effect (shaking-each-syllables var)
   (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
   (modifier 'origin :arg1 (- (base-x2 var) (floor (width var) 2))
@@ -146,6 +154,7 @@
 ;;;
 (register-effect "standard" 'standard-effect-syllables)
 (register-effect "complement" 'complement-effect-syllables)
+(register-effect "complement-partial" 'complement-partial-effect-syllables)
 (register-effect "shaking" 'shaking-each-syllables)
 (register-effect "dropping" 'dropping-each-syllables)
 (register-effect "rotate-ccw" 'rotate-ccw-each-syllables)

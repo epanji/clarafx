@@ -95,6 +95,7 @@
            #:find-modifier
            #:find-note
            #:find-override
+           #:find-partial
            #:find-style
            #:font
            #:fontname
@@ -125,6 +126,7 @@
            #:insert-modifier
            #:insert-note
            #:insert-override
+           #:insert-partial
            #:insert-style
            #:interval
            #:interval-counter
@@ -209,6 +211,7 @@
            #:parse-drawing-commands
            #:parse-effect
            #:parse-script
+           #:partialp
            #:picture
            #:plain-text
            #:point-x1

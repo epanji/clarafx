@@ -2,7 +2,9 @@
 
 (defpackage #:clarafx.core
   (:use #:common-lisp #:claraoke #:clarafx.draw)
-  (:intern #:%string-pixel-width
+  (:intern #:%find-partial
+           #:%insert-partial
+           #:%string-pixel-width
            #:calculate-layout-height
            #:calculate-layout-width
            #:calculate-virtual-alignment-1
@@ -10,6 +12,7 @@
            #:ensure-font-pathname
            #:find-effect
            #:force-split-indexes
+           #:invisiblep
            #:margin-bottom
            #:margin-left
            #:margin-right
@@ -34,11 +37,13 @@
            #:dpi
            #:duration
            #:extra-dialogues
+           #:find-partial
            #:fontname
            #:fontsize
            #:fontspace
            #:funcall-effect
            #:height
+           #:insert-partial
            #:italic
            #:line-syllables
            #:make-alignment
@@ -52,6 +57,7 @@
            #:origin-end
            #:origin-start
            #:parse-effect
+           #:partialp
            #:plain-text
            #:point-x1
            #:point-x2

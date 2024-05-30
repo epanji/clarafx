@@ -9,24 +9,29 @@
   (let ((start (durationinteger (start object)))
         (string (.text (.text object)))
         (counter 0))
-    (multiple-value-bind (indexes1 times1)
+    (multiple-value-bind (indexes1 times1 partials1)
         (loop for batch in (overrides object)
-              for kara = (and (typep batch 'claraoke-text:batch)
-                              (increase-karaoke batch 0))
+              for (kara pred) = (list (and (typep batch 'claraoke-text:batch)
+                                           (increase-karaoke batch 0))
+                                      (not (null (find-partial batch))))
               unless (null kara)
                 collect (index batch) into indexes2
                 and collect (arg1 kara) into times2
-              finally (return (values indexes2 times2)))
+                and collect pred into partials2
+              finally (return (values indexes2 times2 partials2)))
       ;; Prevent null KARAOKE
       (when (and (null indexes1)
                  (null times1))
         (push 0 indexes1)
-        (push 15 times1))
+        (push 15 times1)
+        (push nil partials1))
       (loop for time in times1
+            for partialp in partials1
             for (index1 index2) on indexes1
             collect (prog1 (make-syllable (subseq string index1 index2)
                                           :fontspace fontspace
                                           :face face
+                                          :partialp partialp
                                           :start (+ counter start)
                                           :duration time
                                           :line line)
@@ -194,6 +199,7 @@
    (origin-start :accessor origin-start :initform nil)
    (origin-end :accessor origin-end :initform nil)
    (invisiblep :initarg :invisiblep :reader invisiblep :initform nil)
+   (partialp :initarg :partialp :reader partialp :initform nil)
    (extra-dialogues :accessor extra-dialogues :initform '()))
   (:documentation "Drawable area with alignment inside canvas."))
 
@@ -203,13 +209,14 @@
 (defmethod dialogue ((object syllable) &key)
   (slot-value object 'dialogue))
 
-(defun make-syllable (string &key (start 0) (duration 15) (fontspace 0) (face *face*) (line 0))
+(defun make-syllable (string &key (start 0) (duration 15) (fontspace 0) (face *face*) (line 0) (partialp nil))
   (make-instance 'syllable
                  :h (string-pixel-height string :face face)
                  :w (string-pixel-width string :fontspace fontspace :face face)
                  :plain-text string
                  :invisiblep (and (= 1 (length string))
                                   (char= #\INVISIBLE_SEPARATOR (char string 0)))
+                 :partialp partialp
                  :start start
                  :duration duration
                  :line line))

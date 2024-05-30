@@ -21,6 +21,7 @@
                 :components ((:file "package")
                              (:file "font-ffi")
                              (:file "canvas")
+                             (:file "partial")
                              (:file "alignment")
                              (:file "alignment-code")
                              (:file "alignment-calculation")
