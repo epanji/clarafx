@@ -116,6 +116,14 @@ _Example file [mysubfx4.lisp](Examples/mysubfx4.lisp)_
 
 ![FX4](Examples/mysubfx4.gif)
 
+## Partial Effect
+
+Create partial effect from dialogue with same position and karaoke time.
+
+_Example file [mysubfx5.lisp](Examples/mysubfx5.lisp)_
+
+![FX5](Examples/mysubfx5.gif)
+
 ## CLI
 
 Write effects from file that already have clarafx information.
