@@ -100,8 +100,12 @@
             :arg1 0 :arg2 500 :arg3 0.9
             :arg4 (modifier 'clip-rectangle :arg1 (point-x1 var)
                                             :arg2 (point-y1 var)
-                                            :arg3 (point-x2 var)
-                                            :arg4 (point-y2 var))))
+                                            :arg3 (+ (point-x2 var)
+                                                     (outline (style var))
+                                                     (.shadow (style var)))
+                                            :arg4 (+ (point-y2 var)
+                                                     (outline (style var))
+                                                     (.shadow (style var))))))
 
 (define-effect (clip-expand-horizontal-each-syllables var)
   (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
@@ -113,8 +117,12 @@
             :arg1 0 :arg2 250 :arg3 0.9
             :arg4 (modifier 'clip-rectangle :arg1 (point-x1 var)
                                             :arg2 (point-y1 var)
-                                            :arg3 (point-x2 var)
-                                            :arg4 (point-y2 var))))
+                                            :arg3 (+ (point-x2 var)
+                                                     (outline (style var))
+                                                     (.shadow (style var)))
+                                            :arg4 (+ (point-y2 var)
+                                                     (outline (style var))
+                                                     (.shadow (style var))))))
 
 (define-effect (vacuum-top-center-each-syllables var)
   (modifier 'transformation4
