@@ -81,4 +81,37 @@
       (is (duration-lessp end1 end2))
       (is (= 21 (duration-difference sta1 sta3)))
       (is (duration-greaterp sta1 sta3)))))
+
+(test partial-effects
+  (let ((str0 "{\\k15}Hel{\\k15}lo {\\k15}world!")
+        (str1 "{\\k15}Hel{\\k15}lo {\\k15\\what\\part\\it\\is}world!")
+        (dia0 nil)
+        (dia1 nil)
+        (dia2 nil)
+        (sub1 (subtitle "Test" :text nil)))
+    (flet ((length-effect (&rest args)
+             (length (apply 'clarafx.user::shrink-each-syllables args))))
+      (setf dia0 (dialogue str0))
+      (setf dia1 (dialogue str1))
+      (setf dia2 (dialogue str1 :remove-unknown-modifier-p t))
+      (insert-info sub1 (info "clarafx-1" :value "shaking,,,5,true"))
+      (insert-info sub1 (info "clarafx-2" :value "dropping,,,5,true"))
+      (insert-info sub1 (info "clarafx-3" :value "shrink,,,5,true"))
+      (insert-event sub1 (dialogue str0 :start 0 :end ":5.00" :effect "clarafx-1"))
+      (insert-partial (last-event sub1) "Hel")
+      (insert-event sub1 (dialogue str0 :start 0 :end ":5.00" :effect "clarafx-2"))
+      (insert-partial (last-event sub1) "lo")
+      (insert-event sub1 (dialogue str0 :start 0 :end ":5.00" :effect "clarafx-3"))
+      (insert-partial (last-event sub1) "world")
+      ;; Do mutate sub1
+      (parse-effect sub1)
+      ;; Do tests
+      (is (null (find-partial dia0)))
+      (is (null (find-partial dia2)))
+      (is (find-partial dia1))
+      (is (string-equal str0 (ps-string (.text dia2))))
+      (is (= 6 (length (lines (events sub1)))))
+      (is (= 3 (length-effect dia1 :subtitle sub1 :ignore-partial t)))
+      (is (= 1 (length-effect dia1 :subtitle sub1 :ignore-partial nil)))
+      (is (= 3 (length-effect dia2 :subtitle sub1 :ignore-partial nil))))))
 
