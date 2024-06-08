@@ -9,13 +9,13 @@
 (defgeneric partialp (object)
   (:method (object)
     (and (typep object 'claraoke-text:modifier)
+         (string-equal "unknown" (string (type-of object)))
+         (stringp (arg1 object))
          (string-equal *partial-name* (arg1 object)))))
 
 (defun %find-partial (batch)
   (declare (type claraoke-text:batch batch))
-  (let ((modifier (find-modifier batch :unknown)))
-    (when (partialp modifier)
-      (values modifier))))
+  (find-if 'partialp (modifiers batch)))
 
 (defgeneric find-partial (object)
   (:method (object) nil)
