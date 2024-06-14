@@ -120,4 +120,66 @@ Increase current indexes and add karaoke modifier for override with index 0.
     ((object claraoke-subtitle:subtitle) &optional delay)
   (populate-delay-effect (events object) delay)
   (values))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Populate odd-even effect
+;;;
+(defun %make-counter (&optional (init 0) &aux (counter init))
+  (lambda (&optional option)
+    (case option
+      (:update (incf counter))
+      (:reset (setf counter init))
+      (otherwise (values counter)))))
+
+(defvar *counter* nil)
+
+(defun %populate-odd-even-effect (dialogue odd even &optional (force t))
+  (declare (type claraoke-subtitle:dialogue dialogue)
+           (type (or string null) odd even))
+  (when (null *counter*)
+    (setf *counter* (%make-counter 1)))
+  (let ((string-effect (effect dialogue)))
+    (cond ((oddp (funcall *counter*))
+           (when (and (stringp odd)
+                      (or (string= "" string-effect)
+                          force))
+             (setf (effect dialogue) odd)))
+          ((evenp (funcall *counter*))
+           (when (and (stringp even)
+                      (or (string= "" string-effect)
+                          force))
+             (setf (effect dialogue) even)))))
+  (funcall *counter* :update)
+  (values))
+
+(defgeneric populate-odd-even-effect (object odd even &optional force)
+  (:documentation "Populate dialogue effect for odd lines and even lines.
+If dialogue effect already exists, it is unchanged except when FORCE is true.
+ODD and EVEN argument could be same string or one of them NIL."))
+
+(defmethod populate-odd-even-effect
+    ((object claraoke-subtitle:dialogue) odd even &optional force)
+  (%populate-odd-even-effect object odd even force)
+  (values))
+
+(defmethod populate-odd-even-effect ((object cons) odd even &optional force)
+  (if (null *counter*)
+      (setf *counter* (%make-counter 1))
+      (funcall *counter* :reset))
+  (loop for dialogue in object
+        when (typep dialogue 'claraoke-subtitle:dialogue)
+          do (populate-odd-even-effect dialogue odd even force))
+  (values))
+
+(defmethod populate-odd-even-effect
+    ((object claraoke-subtitle:events) odd even &optional force)
+  (sort-events object)
+  (populate-odd-even-effect (reverse (lines object)) odd even force)
+  (values))
+
+(defmethod populate-odd-even-effect
+    ((object claraoke-subtitle:subtitle) odd even &optional force)
+  (populate-odd-even-effect (events object) odd even force)
+  (values))
 
