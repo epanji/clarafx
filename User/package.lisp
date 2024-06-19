@@ -268,6 +268,7 @@
            #:value
            #:value-mixin
            #:width
+           #:with-auto-increment-events
            #:with-every-syllable-from-karaoke
            #:with-syllable-modifiers
            #:write-subtitle-effect

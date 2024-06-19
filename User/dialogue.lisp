@@ -182,4 +182,73 @@ ODD and EVEN argument could be same string or one of them NIL."))
     ((object claraoke-subtitle:subtitle) odd even &optional force)
   (populate-odd-even-effect (events object) odd even force)
   (values))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; With auto increment events
+;;;
+(defun with-auto-increment-events
+    (subtitle interval frequency counter ktime &rest elements)
+  "Simplify insert events with auto increment for dialogue times.
+Below are description for arguments:
+
+SUBTITLE    is subtitle object targeted for elements.
+INTERVAL    is delay time before next line.
+FREQUENCY   is interval frequency for one line duration.
+COUNTER     is initial time (integer or duration format) for counter.
+KTIME       is initial karaoke time for spell duration.
+ELEMENT     is item with various value to be executed for subtitle object.
+            It could be integer, string, or cons: '(string &optional ±event 0+delay +spell).
+            The integer means to be interval frequency for blank line duration.
+            The string means to be dialogue text.
+            The cons will be parse to dialogue with specific options."
+  (declare (type claraoke-subtitle:subtitle subtitle)
+           (type unsigned-byte interval frequency)
+           (type (or unsigned-byte null) ktime))
+  (let ((cleanup-list (list (interval subtitle)
+                            (interval-frequency subtitle)
+                            (interval-counter subtitle))))
+    (setf (interval subtitle) interval)
+    (setf (interval-frequency subtitle) frequency)
+    (setf (interval-counter subtitle) (durationinteger counter))
+    (unwind-protect
+         (%call-with-auto-increment-events subtitle ktime elements)
+      (setf (interval subtitle) (first cleanup-list))
+      (setf (interval-frequency subtitle) (second cleanup-list))
+      (setf (interval-counter subtitle) (third cleanup-list))))
+  (values))
+
+(defun %call-with-auto-increment-events
+    (subtitle ktime elements)
+  (declare (type claraoke-subtitle:subtitle subtitle)
+           (type (or unsigned-byte null) ktime))
+  (let ((gop (not (null ktime)))
+        (idelay 0)
+        (interval (interval subtitle))
+        (frequency (interval-frequency subtitle)))
+    (flet ((translate-element (element)
+             (etypecase element
+               (cons
+                ;; '(string &optional ±event 0+delay +spell)
+                (multiple-value-bind (str iev ide spe)
+                    (apply 'values element)
+                  (insert-event subtitle
+                                (dialogue str
+                                          :generate-overrides-p gop
+                                          :spell-duration (or spe ktime))
+                                :interval-delay ide
+                                :interval-event (+ frequency iev)))
+                (setf idelay 1))
+               (string
+                (insert-event subtitle
+                              (dialogue element
+                                        :generate-overrides-p gop
+                                        :spell-duration ktime)
+                              :interval-delay idelay)
+                (setf idelay 1))
+               (unsigned-byte
+                (incf (interval-counter subtitle) (* element interval))
+                (setf idelay 0)))))
+      (mapc #'translate-element elements)))
+  (values))
 
