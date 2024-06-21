@@ -230,6 +230,7 @@
            #:rectangle-area
            #:red
            #:register-effect
+           #:reset-internal-effects
            #:resize-x
            #:resize-xy
            #:resize-y

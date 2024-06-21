@@ -160,19 +160,23 @@
 ;;;
 ;;; Register Effects
 ;;;
-(register-effect "standard" 'standard-effect-syllables)
-(register-effect "complement" 'complement-effect-syllables)
-(register-effect "complement-partial" 'complement-partial-effect-syllables)
-(register-effect "shaking" 'shaking-each-syllables)
-(register-effect "dropping" 'dropping-each-syllables)
-(register-effect "rotate-ccw" 'rotate-ccw-each-syllables)
-(register-effect "rotate-cw" 'rotate-cw-each-syllables)
-(register-effect "enlarge" 'enlarge-each-syllables)
-(register-effect "shrink" 'shrink-each-syllables)
-(register-effect "enlarge-with-star" 'enlarge-with-star-each-syllables)
-(register-effect "clip-expand-vertical" 'clip-expand-vertical-each-syllables)
-(register-effect "clip-expand-horizontal" 'clip-expand-horizontal-each-syllables)
-(register-effect "vacuum-top-center" 'vacuum-top-center-each-syllables)
-(register-effect "shear-x" 'shear-x-each-syllables)
-(register-effect "shear-y" 'shear-y-each-syllables)
+(defun reset-internal-effects ()
+  "Re-register all internal effects."
+  (register-effect "standard" 'standard-effect-syllables)
+  (register-effect "complement" 'complement-effect-syllables)
+  (register-effect "complement-partial" 'complement-partial-effect-syllables)
+  (register-effect "shaking" 'shaking-each-syllables)
+  (register-effect "dropping" 'dropping-each-syllables)
+  (register-effect "rotate-ccw" 'rotate-ccw-each-syllables)
+  (register-effect "rotate-cw" 'rotate-cw-each-syllables)
+  (register-effect "enlarge" 'enlarge-each-syllables)
+  (register-effect "shrink" 'shrink-each-syllables)
+  (register-effect "enlarge-with-star" 'enlarge-with-star-each-syllables)
+  (register-effect "clip-expand-vertical" 'clip-expand-vertical-each-syllables)
+  (register-effect "clip-expand-horizontal" 'clip-expand-horizontal-each-syllables)
+  (register-effect "vacuum-top-center" 'vacuum-top-center-each-syllables)
+  (register-effect "shear-x" 'shear-x-each-syllables)
+  (register-effect "shear-y" 'shear-y-each-syllables))
+
+(reset-internal-effects)
 
