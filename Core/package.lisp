@@ -46,6 +46,7 @@
            #:insert-partial
            #:italic
            #:line-syllables
+           #:list-effects
            #:make-alignment
            #:make-alignment*
            #:make-canvas

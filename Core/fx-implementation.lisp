@@ -54,6 +54,10 @@
 ;;;
 (defvar *effects* (make-hash-table :test 'equalp))
 
+(defun list-effects ()
+  (loop for effect-name being the hash-key in *effects*
+        collect effect-name))
+
 (defun register-effect (name symbol)
   (declare (type string name)
            (type symbol symbol))
