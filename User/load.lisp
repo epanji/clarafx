@@ -33,6 +33,7 @@
              #:in-package
              #:load
              #:load-external-effects
+             #:load-revision-file
              #:make-package
              #:read-from-string
              #:rename-file
@@ -168,16 +169,20 @@
           (princ rev stream))
         (values t)))))
 
+(defun load-revision-file (file)
+  (declare (type pathname file))
+  (let ((*package* (find-package :clarafx.load)))
+    (handler-case (prog2
+                      (maybe-revision file)
+                      (load file)
+                    (format *standard-output* "~&Loading ~A~%" file))
+      (error (condition)
+        (format *error-output*
+                "~&~A~%Incomplete loading ~A~%"
+                condition file)))))
+
 (defun load-external-effects ()
-  (let ((file (effects-pathname))
-        (*package* (find-package :clarafx.load)))
+  (let ((file (effects-pathname)))
     (unless (null file)
-      (handler-case (prog2
-                        (maybe-revision file)
-                        (load file)
-                      (format *standard-output* "~&Loading ~A~%" file))
-        (error (condition)
-          (format *error-output*
-                  "~&~A~%Incomplete loading ~A~%"
-                  condition file))))))
+      (load-revision-file file))))
 

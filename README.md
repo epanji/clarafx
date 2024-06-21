@@ -132,10 +132,22 @@ Write effects from file that already have clarafx information.
 $ clarafx -i input.ass -o output.ass
 ```
 
+Load clarafx script from a file.
+
+```sh
+$ clarafx script.lisp
+```
+
+Load clarafx script from a file with external effects.
+
+```sh
+$ clarafx -l script.lisp
+```
+
 Help message:
 
 ```sh
-Usage: clarafx [-h] [-v] [-s] [-l] [-i <file>] [-o <file>]
+Usage: clarafx [-h] [-v] [-s] [-l] [-i <file>] [-o <file>] [script.lisp]
 
 Available options:
   -h        Show this help message.

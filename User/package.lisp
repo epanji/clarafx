@@ -139,6 +139,7 @@
            #:line-syllables
            #:lines
            #:load-external-effects
+           #:load-revision-file
            #:make-alignment
            #:make-alignment*
            #:make-canvas
