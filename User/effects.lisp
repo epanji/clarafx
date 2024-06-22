@@ -176,7 +176,8 @@
   (register-effect "clip-expand-horizontal" 'clip-expand-horizontal-each-syllables)
   (register-effect "vacuum-top-center" 'vacuum-top-center-each-syllables)
   (register-effect "shear-x" 'shear-x-each-syllables)
-  (register-effect "shear-y" 'shear-y-each-syllables))
+  (register-effect "shear-y" 'shear-y-each-syllables)
+  (list-effects))
 
 (reset-internal-effects)
 

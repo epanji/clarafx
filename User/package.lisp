@@ -138,6 +138,7 @@
            #:line
            #:line-syllables
            #:lines
+           #:list-effects
            #:load-external-effects
            #:load-revision-file
            #:make-alignment
