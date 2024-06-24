@@ -82,6 +82,8 @@
 (test partial-effects
   (let ((str0 "{\\k15}Hel{\\k15}lo {\\k15}world!")
         (str1 "{\\k15}Hel{\\k15}lo {\\k15\\what\\part\\it\\is}world!")
+        (str2 "{\\k15}Hello {\\k15}world!")
+        (str3 "{\\k15}Hel{\\k15}lo \\Nworld!")
         (dia0 nil)
         (dia1 nil)
         (dia2 nil)
@@ -96,10 +98,12 @@
       (insert-info sub1 (info "clarafx-3" :value "shrink,,,5,true"))
       (insert-event sub1 (dialogue str0 :start 0 :end ":5.00" :effect "clarafx-1"))
       (insert-partial (last-event sub1) "Hel")
-      (insert-event sub1 (dialogue str0 :start 0 :end ":5.00" :effect "clarafx-2"))
+      (insert-event sub1 (dialogue str2 :start 0 :end ":5.00" :effect "clarafx-2"))
       (insert-partial (last-event sub1) "lo")
-      (insert-event sub1 (dialogue str0 :start 0 :end ":5.00" :effect "clarafx-3"))
+      (insert-karaoke (last-event sub1) "lo" 15)
+      (insert-event sub1 (dialogue str3 :start 0 :end ":5.00" :effect "clarafx-3"))
       (insert-partial (last-event sub1) "world")
+      (insert-karaoke (last-event sub1) "world" 15)
       ;; Do mutate sub1
       (parse-effect sub1)
       ;; Do tests
