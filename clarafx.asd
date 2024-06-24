@@ -42,7 +42,9 @@
                 :serial t
                 :components ((:file "package")
                              (:file "main")
-                             (:static-file "Makefile")))
+                             (:static-file "Makefile")
+                             (:static-file "slack-desc")
+                             (:static-file "slackbuild.sh")))
                (:static-file "LICENSE")
                (:static-file "README.md")
                (:static-file "version.lisp-expr"))
