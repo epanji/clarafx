@@ -10,7 +10,7 @@
         (string (.text (.text object)))
         (counter 0))
     (multiple-value-bind (indexes1 times1 partials1)
-        (loop for batch in (overrides object)
+        (loop for batch in (stable-sort (copy-seq (overrides object)) '< :key 'index)
               for (kara pred) = (list (and (typep batch 'claraoke-text:batch)
                                            (increase-karaoke batch 0))
                                       (not (null (find-partial batch))))
