@@ -79,6 +79,41 @@
       (is (= 21 (duration-difference sta1 sta3)))
       (is (duration-greaterp sta1 sta3)))))
 
+(test populate-odd-event-effect
+  (let ((sub1 (subtitle "text" :text nil)))
+    (insert-info sub1 (info "clarafx-1" :value "shaking"))
+    (insert-info sub1 (info "clarafx-2" :value "dropping"))
+    (with-auto-increment-events
+      sub1 30 10 1 nil
+      "dialogue odd"                    ;1
+      "dialogue even"                   ;2
+      "dialogue odd 1"                  ;3
+      '("dialogue even 1" -1)           ;4
+      "dialogue odd 2"                  ;5
+      "dialogue even 2"                 ;6
+      "dialogue odd 3"                  ;7
+      '("dialogue even 3" 0 0)          ;8
+      "dialogue odd 4"                  ;9
+      '("dialogue even 4" 0 1 50)       ;10
+      "dialogue odd 5"                  ;11
+      5
+      "dialogue even 5")                ;12
+    (populate-odd-even-effect sub1 "clarafx-1" "clarafx-2")
+    (insert-event sub1 (dialogue "Title" :start 0 :duration (end (last-event sub1))))
+    (sort-events sub1)
+    (is (string-equal "" (effect (find-event sub1 0))))
+    (is (string-equal "Title" (.text (.text (find-event sub1 0)))))
+    (is (string-equal "clarafx-1" (effect (find-event sub1 1))))
+    (is (string-equal "dialogue odd" (.text (.text (find-event sub1 1)))))
+    (is (string-equal "clarafx-2" (effect (find-event sub1 2))))
+    (is (= (* 30 10) (durationinteger (duration-length (find-event sub1 3)))))
+    (is (= (* 30 9) (durationinteger (duration-length (find-event sub1 4)))))
+    (is (= 30 (duration-difference (end (find-event sub1 5)) (start (find-event sub1 6)))))
+    (is (zerop (duration-difference (end (find-event sub1 7)) (start (find-event sub1 8)))))
+    (is (null (increase-karaoke (find-override (find-event sub1 9) 0) 0)))
+    (is (not (null (increase-karaoke (find-override (find-event sub1 10) 0) 0))))
+    (is (= (* 30 5) (duration-difference (end (find-event sub1 11)) (start (find-event sub1 12)))))))
+
 (test partial-effects
   (let ((str0 "{\\k15}Hel{\\k15}lo {\\k15}world!")
         (str1 "{\\k15}Hel{\\k15}lo {\\k15\\what\\part\\it\\is}world!")
