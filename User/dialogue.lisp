@@ -232,12 +232,13 @@ ELEMENT     is item with various value to be executed for subtitle object.
                 ;; '(string &optional ±event 0+delay +spell)
                 (multiple-value-bind (str iev ide spe)
                     (apply 'values element)
-                  (insert-event subtitle
-                                (dialogue str
-                                          :generate-overrides-p gop
-                                          :spell-duration (or spe ktime))
-                                :interval-delay ide
-                                :interval-event (+ frequency iev)))
+                  (let ((lgop (or gop (not (null spe)))))
+                    (insert-event subtitle
+                                  (dialogue str
+                                            :generate-overrides-p lgop
+                                            :spell-duration (or spe ktime))
+                                  :interval-delay ide
+                                  :interval-event (+ frequency iev))))
                 (setf idelay 1))
                (string
                 (insert-event subtitle
