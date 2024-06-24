@@ -40,9 +40,9 @@
        (insert-override text (override 'unknown index :arg1 *partial-name*)))
       (claraoke-text:newline
        (let ((arg1 (arg1 override)))
-         (change-class override 'batch :modifiers
-                       (list (claraoke:modifier 'newline :arg1 arg1)
-                             (claraoke:modifier 'unknown :arg1 *partial-name*)))))
+         (change-class override 'claraoke-text:batch :modifiers
+                       (list (modifier 'newline :arg1 arg1)
+                             (modifier 'unknown :arg1 *partial-name*)))))
       (claraoke-text:batch
        (let ((modifier (%find-partial override)))
          (when (null modifier)
