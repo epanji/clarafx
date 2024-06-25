@@ -79,7 +79,7 @@
       (is (= 21 (duration-difference sta1 sta3)))
       (is (duration-greaterp sta1 sta3)))))
 
-(test populate-odd-event-effect
+(test populate-odd-even-effect
   (let ((sub1 (subtitle "text" :text nil)))
     (insert-info sub1 (info "clarafx-1" :value "shaking"))
     (insert-info sub1 (info "clarafx-2" :value "dropping"))
