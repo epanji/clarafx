@@ -209,13 +209,17 @@
 (defmethod dialogue ((object syllable) &key)
   (slot-value object 'dialogue))
 
+(defun string-invisiblep (string)
+  (or (zerop (length string))
+      (and (= 1 (length string))
+           (char= #\INVISIBLE_SEPARATOR (char string 0)))))
+
 (defun make-syllable (string &key (start 0) (duration 15) (fontspace 0) (face *face*) (line 0) (partialp nil))
   (make-instance 'syllable
                  :h (string-pixel-height string :face face)
                  :w (string-pixel-width string :fontspace fontspace :face face)
                  :plain-text string
-                 :invisiblep (and (= 1 (length string))
-                                  (char= #\INVISIBLE_SEPARATOR (char string 0)))
+                 :invisiblep (string-invisiblep string)
                  :partialp partialp
                  :start start
                  :duration duration

@@ -16,7 +16,7 @@
                                   (loop for syllable in syllables
                                         sum (width syllable))
                                   (loop for syllable in syllables
-                                        sum (if (char= #\INVISIBLE_SEPARATOR (char (plain-text syllable) 0))
+                                        sum (if (string-invisiblep (plain-text syllable))
                                                 0
                                                 (+ (height syllable) fontspace))))
           do (ecase an

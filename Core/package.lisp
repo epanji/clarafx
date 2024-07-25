@@ -22,6 +22,7 @@
            #:set-char-size
            #:split-dialogue-multiple-line
            #:split-dialogue-single-line
+           #:string-invisiblep
            #:string-pixel-height
            #:string-pixel-width)
   (:export #:alignment
