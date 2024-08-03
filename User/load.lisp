@@ -30,6 +30,7 @@
              #:eval
              #:eval-when
              #:find-package
+             #:find-symbol
              #:in-package
              #:load
              #:load-external-effects
@@ -38,6 +39,7 @@
              #:read-from-string
              #:rename-file
              #:rename-package
+             #:unintern
              #:unuse-package
              #:use-package)))
 
