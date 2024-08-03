@@ -1,6 +1,7 @@
 (cl:in-package #:clarafx-test)
 
 (defun suite-tests ()
+  (reset-internal-effects)
   (run! 'intern-suite)
   (run! 'extern-suite)
   (run! 'dialogue-suite))
