@@ -78,7 +78,7 @@
     (declare (type list options fargs))
     (multiple-value-setq (options fargs) (get-options))
     (when (< 1 (length fargs))
-      (opts:describe :usage-of "clarafx" :args "[script.lisp]" :brief t)
+      (opts:describe :usage-of "clarafx" :args "[<script>.lisp]" :brief t)
       (opts:exit 1))
     (setf ifile (getf options :input))
     (setf ofile (getf options :output))
