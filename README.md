@@ -147,7 +147,7 @@ $ clarafx -l script.lisp
 Help message:
 
 ```sh
-Usage: clarafx [-h] [-v] [-s] [-l] [-i <file>] [-o <file>] [script.lisp]
+Usage: clarafx [-h] [-v] [-s] [-l] [-i <file>] [-o <file>] [<script>.lisp]
 
 Available options:
   -h        Show this help message.

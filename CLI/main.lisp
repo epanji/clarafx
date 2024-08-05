@@ -88,7 +88,7 @@
        :suffix (format nil "Author:~%~2TPanji Kusuma <epanji@gmail.com>~2%~
                             License:~%~2TBSD-2-Clause license")
        :usage-of "clarafx"
-       :args "[script.lisp]")
+       :args "[<script>.lisp]")
       (opts:exit 0))
     (when (getf options :version nil)
       (format t "~A~%" (clarafx:clarafx-version))
