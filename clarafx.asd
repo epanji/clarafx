@@ -22,6 +22,7 @@
                              (:file "font-ffi")
                              (:file "canvas")
                              (:file "partial")
+                             (:file "gradation")
                              (:file "alignment")
                              (:file "alignment-code")
                              (:file "alignment-calculation")

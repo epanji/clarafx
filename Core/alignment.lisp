@@ -176,11 +176,15 @@
                                         ,canvas
                                         ,dialogue))
             (,result (loop for syllables in (line-syllables ,alignment)
-                           append (loop for ,var-name in syllables
+                           append (loop with i = 0 and n = (length syllables)
+                                        for ,var-name in syllables
                                         append (progn (setf (style ,var-name)
                                                             (find-style ,subtitle ,style-name))
                                                       (setf (dialogue ,var-name) ,dialogue)
                                                       (setf (canvas ,var-name) ,canvas)
+                                                      (setf (index-in-line ,var-name) i)
+                                                      (setf (count-in-line ,var-name) n)
+                                                      (incf i)
                                                       ,@body)))))
        (values (reverse ,result) ,alignment))))
 
@@ -200,6 +204,8 @@
    (origin-end :accessor origin-end :initform nil)
    (invisiblep :initarg :invisiblep :reader invisiblep :initform nil)
    (partialp :initarg :partialp :reader partialp :initform nil)
+   (index-in-line :initform nil :accessor index-in-line)
+   (count-in-line :initform nil :accessor count-in-line)
    (extra-dialogues :accessor extra-dialogues :initform '()))
   (:documentation "Drawable area with alignment inside canvas."))
 

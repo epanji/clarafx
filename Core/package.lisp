@@ -34,6 +34,7 @@
            #:bold
            #:canvas
            #:char-to-drawing-commands
+           #:count-in-line
            #:define-effect
            #:dpi
            #:duration
@@ -43,7 +44,9 @@
            #:fontsize
            #:fontspace
            #:funcall-effect
+           #:gradation-colors
            #:height
+           #:index-in-line
            #:insert-partial
            #:italic
            #:line-syllables

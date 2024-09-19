@@ -156,6 +156,24 @@
             :arg4 (list (modifier 'fontshear-y :arg1 -1)
                         (modifier 'fontshear-y :arg1 0))))
 
+(define-effect (gradation-each-syllables var)
+  (let ((string (.text (.text (dialogue var))))
+        (override (first (overrides (dialogue var)))))
+    (setf (origin-start var)
+          (increase-duration
+           (duration
+            (if (char= #\INVISIBLE_SEPARATOR (char string 0))
+                (arg1 (claraoke:increase-karaoke override 0))
+                0))
+           (start (dialogue var))))
+    (setf (origin-end var) (end (dialogue var)))
+    (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var)))
+  (modifier 'color1 :arg1 (nth (index-in-line var)
+                               (gradation-colors
+                                (secondary-colour (style var))
+                                (primary-colour (style var))
+                                (count-in-line var)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Register Effects
@@ -177,6 +195,7 @@
   (register-effect "vacuum-top-center" 'vacuum-top-center-each-syllables)
   (register-effect "shear-x" 'shear-x-each-syllables)
   (register-effect "shear-y" 'shear-y-each-syllables)
+  (register-effect "gradation" 'gradation-each-syllables)
   (list-effects))
 
 (reset-internal-effects)
