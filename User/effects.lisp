@@ -174,6 +174,28 @@
                                 (primary-colour (style var))
                                 (count-in-line var)))))
 
+(define-effect (rgb-range-each-syllables var)
+  (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
+  (modifier 'border :arg1 1)
+  (modifier 'blur :arg1 2)
+  (modifier 'color1 :arg1 (color "white"))
+  (modifier 'color3 :arg1 (nth (index-in-line var)
+                               (rgb-range-colors
+                                (primary-colour (style var))
+                                (secondary-colour (style var))
+                                (count-in-line var)))))
+
+(define-effect (bgr-range-each-syllables var)
+  (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
+  (modifier 'border :arg1 1)
+  (modifier 'blur :arg1 2)
+  (modifier 'color1 :arg1 (color "white"))
+  (modifier 'color3 :arg1 (nth (index-in-line var)
+                               (bgr-range-colors
+                                (primary-colour (style var))
+                                (secondary-colour (style var))
+                                (count-in-line var)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Register Effects
@@ -196,6 +218,8 @@
   (register-effect "shear-x" 'shear-x-each-syllables)
   (register-effect "shear-y" 'shear-y-each-syllables)
   (register-effect "gradation" 'gradation-each-syllables)
+  (register-effect "rgb-range" 'rgb-range-each-syllables)
+  (register-effect "bgr-range" 'bgr-range-each-syllables)
   (list-effects))
 
 (reset-internal-effects)

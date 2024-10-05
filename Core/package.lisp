@@ -5,6 +5,8 @@
   (:intern #:%find-partial
            #:%insert-partial
            #:%string-pixel-width
+           #:%sum-elements
+           #:%the-elements
            #:calculate-layout-height
            #:calculate-layout-width
            #:calculate-virtual-alignment-1
@@ -31,6 +33,7 @@
            #:base-x2
            #:base-y1
            #:base-y2
+           #:bgr-range-colors
            #:bold
            #:canvas
            #:char-to-drawing-commands
@@ -71,6 +74,7 @@
            #:rectangle
            #:rectangle-area
            #:register-effect
+           #:rgb-range-colors
            #:split-dialogue
            #:start
            #:syllable
