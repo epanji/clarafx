@@ -124,6 +124,14 @@ _Example file [mysubfx5.lisp](Examples/mysubfx5.lisp)_
 
 ![FX5](Examples/mysubfx5.gif)
 
+## Gradation
+
+Color gradation from primary to secondary colors or vise versa.
+
+_Example file [mysubfx6.lisp](Examples/mysubfx6.lisp)_
+
+![FX6](Examples/mysubfx6.gif)
+
 ## CLI
 
 Write effects from file that already have clarafx information.
