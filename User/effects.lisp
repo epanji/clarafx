@@ -185,6 +185,50 @@
                                 (secondary-colour (style var))
                                 (count-in-line var)))))
 
+(define-effect (rbg-range-each-syllables var)
+  (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
+  (modifier 'border :arg1 1)
+  (modifier 'blur :arg1 2)
+  (modifier 'color1 :arg1 (color "white"))
+  (modifier 'color3 :arg1 (nth (index-in-line var)
+                               (rbg-range-colors
+                                (primary-colour (style var))
+                                (secondary-colour (style var))
+                                (count-in-line var)))))
+
+(define-effect (grb-range-each-syllables var)
+  (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
+  (modifier 'border :arg1 1)
+  (modifier 'blur :arg1 2)
+  (modifier 'color1 :arg1 (color "white"))
+  (modifier 'color3 :arg1 (nth (index-in-line var)
+                               (grb-range-colors
+                                (primary-colour (style var))
+                                (secondary-colour (style var))
+                                (count-in-line var)))))
+
+(define-effect (gbr-range-each-syllables var)
+  (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
+  (modifier 'border :arg1 1)
+  (modifier 'blur :arg1 2)
+  (modifier 'color1 :arg1 (color "white"))
+  (modifier 'color3 :arg1 (nth (index-in-line var)
+                               (gbr-range-colors
+                                (primary-colour (style var))
+                                (secondary-colour (style var))
+                                (count-in-line var)))))
+
+(define-effect (brg-range-each-syllables var)
+  (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
+  (modifier 'border :arg1 1)
+  (modifier 'blur :arg1 2)
+  (modifier 'color1 :arg1 (color "white"))
+  (modifier 'color3 :arg1 (nth (index-in-line var)
+                               (brg-range-colors
+                                (primary-colour (style var))
+                                (secondary-colour (style var))
+                                (count-in-line var)))))
+
 (define-effect (bgr-range-each-syllables var)
   (modifier 'pos :arg1 (base-x1 var) :arg2 (base-y1 var))
   (modifier 'border :arg1 1)
@@ -219,6 +263,10 @@
   (register-effect "shear-y" 'shear-y-each-syllables)
   (register-effect "gradation" 'gradation-each-syllables)
   (register-effect "rgb-range" 'rgb-range-each-syllables)
+  (register-effect "rbg-range" 'rbg-range-each-syllables)
+  (register-effect "grb-range" 'grb-range-each-syllables)
+  (register-effect "gbr-range" 'gbr-range-each-syllables)
+  (register-effect "brg-range" 'brg-range-each-syllables)
   (register-effect "bgr-range" 'bgr-range-each-syllables)
   (list-effects))
 
