@@ -35,6 +35,7 @@
            #:base-y2
            #:bgr-range-colors
            #:bold
+           #:brg-range-colors
            #:canvas
            #:char-to-drawing-commands
            #:count-in-line
@@ -47,7 +48,9 @@
            #:fontsize
            #:fontspace
            #:funcall-effect
+           #:gbr-range-colors
            #:gradation-colors
+           #:grb-range-colors
            #:height
            #:index-in-line
            #:insert-partial
@@ -71,6 +74,7 @@
            #:point-x2
            #:point-y1
            #:point-y2
+           #:rbg-range-colors
            #:rectangle
            #:rectangle-area
            #:register-effect
