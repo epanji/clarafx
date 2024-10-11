@@ -5,19 +5,16 @@
 ;;; Gradation colors
 ;;;
 (defun gradation-colors (from to &optional (amount 3))
-  (let ((c0 (claraoke:color from))
-        (c1 (claraoke:color to))
+  "Return list of colors with quantities equal to AMOUNT argument.
+These colors are obtained by calculating the gradation between two colors.
+First color is FROM argument and second color is TO argument."
+  (let ((c0 (color from))
+        (c1 (color to))
         (sf (/ 1 (max 1 (1- amount)))))
     (flet ((icolor (isf)
-             (claraoke:rgb (round (+ (claraoke:red c0)
-                                     (* isf (- (claraoke:red c1)
-                                               (claraoke:red c0)))))
-                           (round (+ (claraoke:green c0)
-                                     (* isf (- (claraoke:green c1)
-                                               (claraoke:green c0)))))
-                           (round (+ (claraoke:blue c0)
-                                     (* isf (- (claraoke:blue c1)
-                                               (claraoke:blue c0))))))))
+             (rgb (round (+ (red c0) (* isf (- (red c1) (red c0)))))
+                  (round (+ (green c0) (* isf (- (green c1) (green c0)))))
+                  (round (+ (blue c0) (* isf (- (blue c1) (blue c0))))))))
       (loop for i from 0 below (max 2 amount)
             collect (icolor (* i sf))))))
 
@@ -45,11 +42,21 @@
 
 (macrolet ((define-color-range (name (p0 p1 p2))
              (declare (type (integer 0 2) p0 p1 p2))
-             (let ((fn '(claraoke:red claraoke:green claraoke:blue))
+             (let ((fn '(red green blue))
                    (sn '(r g b)))
                `(defun ,name (from to &optional (amount 3))
-                  (let* ((c0 (claraoke:color from))
-                         (c1 (claraoke:color to))
+                  ,(format nil "Return list of colors with quantities ~
+                  equal to AMOUNT argument. ~%These colors are ~
+                  obtained by calculating the range between two ~
+                  decimals and ~%converting all results into colors ~
+                  ~A. ~%First decimal is color conversion of FROM ~
+                  argument and ~%second decimal is color conversion of ~
+                  TO argument."
+                           (list (nth p0 sn)
+                                 (nth p1 sn)
+                                 (nth p2 sn)))
+                  (let* ((c0 (color from))
+                         (c1 (color to))
                          (sum0 (%sum-elements (,(nth p0 fn) c0)
                                               (,(nth p1 fn) c0)
                                               (,(nth p2 fn) c0)))
@@ -67,9 +74,9 @@
                                                          ,(nth p1 sn)
                                                          ,(nth p2 sn))
                                         (%the-elements sum)
-                                      (claraoke:rgb ,(nth 0 sn)
-                                                    ,(nth 1 sn)
-                                                    ,(nth 2 sn))))))))))
+                                      (rgb ,(nth 0 sn)
+                                           ,(nth 1 sn)
+                                           ,(nth 2 sn))))))))))
   (define-color-range rgb-range-colors (0 1 2))
   (define-color-range rbg-range-colors (0 2 1))
   (define-color-range grb-range-colors (1 0 2))
