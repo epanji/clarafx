@@ -26,9 +26,11 @@
            #:base-x2
            #:base-y1
            #:base-y2
+           #:bgr-range-colors
            #:blue
            #:bold
            #:border-style
+           #:brg-range-colors
            #:canvas
            #:centiseconds
            #:char-to-drawing-commands
@@ -39,6 +41,7 @@
            #:colorstringp
            #:command
            #:comment
+           #:count-in-line
            #:decrease-duration
            #:decrease-karaoke
            #:decrease-modifier
@@ -103,8 +106,11 @@
            #:fontsize
            #:fontspace
            #:funcall-effect
+           #:gbr-range-colors
+           #:gradation-colors
            #:graphic
            #:graphics
+           #:grb-range-colors
            #:green
            #:header
            #:height
@@ -114,6 +120,7 @@
            #:increase-modifier
            #:increase-override
            #:index
+           #:index-in-line
            #:info
            #:insert-event
            #:insert-font
@@ -226,6 +233,7 @@
            #:primary-colour
            #:print-script
            #:random-color
+           #:rbg-range-colors
            #:read-subtitle-effect
            #:rectangle
            #:rectangle-area
@@ -236,6 +244,7 @@
            #:resize-xy
            #:resize-y
            #:rgb
+           #:rgb-range-colors
            #:rotate-center
            #:rotate-origin
            #:round-x
